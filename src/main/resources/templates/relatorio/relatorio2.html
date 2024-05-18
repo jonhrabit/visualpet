@@ -1,0 +1,381 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+<style type="text/css">
+#titulo {
+	font-style: oblique;
+	text-align: center;
+}
+</style>
+
+<link th:replace="fragmentos/css"></link>
+
+<title>Relatório</title>
+<link rel="icon" href="/images/icon.png" />
+</head>
+<body>
+
+	<div>
+		<br />
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row border">
+					<div class="col-md-6">
+						<h4>Visual Pet Estética Canina</h4>
+						<h6>CNPJ 35.234.983/0001-05</h6>
+						<h6>Av. Protásio Alves nº.7195 - Alto Petropólis - Porto
+							Alegre/RS</h6>
+						<h6>Telefone: (51) 3334 0703</h6>
+					</div>
+				</div>
+				</br>
+				<div id="resultado">
+					<table border=1>
+
+						<tr>
+							<td colspan="13" class="p-2" id="titulo">Formas de Pagamento</td>
+						</tr>
+						<tr>
+							<th></th>
+							<th class="p-2">Janeiro</th>
+							<th class="p-2">Fevereiro</th>
+							<th class="p-2">Março</th>
+							<th class="p-2">Abril</th>
+							<th class="p-2">Maio</th>
+							<th class="p-2">Junho</th>
+							<th class="p-2">Julho</th>
+							<th class="p-2">Agosto</th>
+							<th class="p-2">Setembro</th>
+							<th class="p-2">Outubro</th>
+							<th class="p-2">Novembro</th>
+							<th class="p-2">Dezembro</th>
+						</tr>
+						<tr>
+							<td>Dinheiro (R$)</td>
+							<td>23.00</td>
+							<td>990.00</td>
+							<td>876.12</td>
+							<td>80.34</td>
+							<td>1114.05</td>
+							<td>23.00</td>
+							<td>345.23</td>
+							<td>908.12</td>
+							<td>1198.34</td>
+							<td>1237.12</td>
+							<td>1102.23</td>
+							<td>1556.09</td>
+						</tr>
+						<tr>
+							<td>Débito</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td>Crédito</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td>Crédito/Comprador</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td>Débito - Maq. Richard</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td>Crédito - Maq. Richard</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td colspan="13" class="p-2" id="titulo">Lucro</td>
+						</tr>
+						<tr>
+							<td>Crédito</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td>Débito</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td>Saldo</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td colspan="13" class="p-2" id="titulo">Ticket Médio</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td colspan="13" class="p-2" id="titulo">Vendas por Setor</td>
+						</tr>
+						<tr>
+							<td>Clínica</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td>Estética</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td colspan="13" class="p-2" id="titulo">Vendas por Serviço</td>
+						</tr>
+						<tr>
+							<td>Banho</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+						<tr>
+							<td>Consulta</td>
+							<td>R$ 23.00</td>
+							<td>R$ 990.00</td>
+							<td>R$ 876.12</td>
+							<td>R$ 80.34</td>
+							<td>R$ 1114.05</td>
+							<td>R$ 23.00</td>
+							<td>R$ 345.23</td>
+							<td>R$ 908.12</td>
+							<td>R$ 1198.34</td>
+							<td>R$ 1237.12</td>
+							<td>R$ 1102.23</td>
+							<td>R$ 1556.09</td>
+						</tr>
+					</table>
+
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row  justify-content-end">
+
+				<span
+					th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">01/01/2020</span>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="fragmentos/js"></div>
+
+	<script th:inline="javascript">
+		var relatorio =[[${relatorio}]];
+		console.log(relatorio);
+		imprimir();
+		
+		function imprimir(){
+		    $("#resultado").html("");
+		    var tabela = $("<table class='table'></table>");
+		    var cabecario=$("<tr><th></th><th>Janeiro</th><th>Fevereiro</th><th>Março</th><th>Abril</th>"+
+			    "<th>Maio</th><th>Junho</th><th>Julho</th><th>Agosto</th>"+
+			    "<th>Setembro</th><th>Outubro</th><th>Novembro</th><th>Dezembro</th><th>"+relatorio.nome+"</th></tr>");
+		    tabela.append(cabecario);
+		    let grupo="";
+		    let i = 0, row=0, col=0;
+		    relatorio.linhas.forEach(function(linha){
+				if((grupo=="")||(grupo!=linha.grupo)){
+				    let l = $("<tr id='row"+row+"'></tr>");
+					l.append($('<td colspan="14" id="titulo" class="bg-primary text-white">'+linha.grupo+' (R$)</td>'));
+					row++;
+					grupo=linha.grupo;
+					tabela.append(l);
+				}
+				    
+				let l = $("<tr id='row"+row+"'></tr>");
+				row++;
+				l.append($("<td id='col0'>"+linha.nome+"</td>"));
+				linha.valores.forEach(function(valor){
+				    col++;
+				    let classe="";
+				    if(i<12){
+					    if(valor<0){
+							classe="class='text-danger'";
+					    }
+				    }else{
+					classe="class='font-weight-bold'";
+				    }
+				    let valor_cell = valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+					l.append($("<td "+classe+" id='cell"+row+""+col+"'>"+valor_cell+"</td>")); 
+					
+					i++;
+				});
+				col=0;
+				i=0;
+				tabela.append(l);
+		    });
+		    
+		    $("#resultado").append(tabela);
+
+		    
+		    for(let i=0;i<13;i++){
+				imprimir_percentagem(13, 8,i);
+				imprimir_percentagem(8, 4,i);
+				imprimir_percentagem(16, 10,i);
+			}
+		    
+				
+		}
+		
+		function imprimir_percentagem(html_linha, relatorio_linha, coluna){
+		    
+		    let total = 0, x = 0, j = 0, limite=0;
+		    let hl = html_linha;
+		    while(($("#cell"+hl+"1").html()===undefined)==false){
+				hl++;
+				limite++;
+		    }
+		    console.log("limite: "+ limite);
+		    for(let i=0;i<limite;i++){
+				total = total+relatorio.linhas[relatorio_linha+i].valores[coluna];
+		    }
+		    for(let i=0;i<limite;i++){
+			    x=coluna+1;
+			    j=html_linha+i;
+			    if(relatorio.linhas[relatorio_linha+i].valores[coluna]>0)
+			    $("#cell"+j+x).html($("#cell"+j+x).html()+" <span class='text-muted'>"+(100*relatorio.linhas[relatorio_linha+i].valores[coluna]/total).toFixed(2)+" %</span>");
+		    }
+		    
+		    
+		}
+		
+	</script>
+
+</body>
+</html>

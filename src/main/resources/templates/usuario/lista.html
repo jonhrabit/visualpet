@@ -1,0 +1,105 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
+	integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt"
+	crossorigin="anonymous" />
+
+<title>Lista de Usuários</title>
+<link rel="icon" href="/images/icon.png" />
+
+</head>
+<body>
+	<div th:replace="fragmentos/menu"></div>
+
+	<div class="container" style="padding: 20">
+		<h5>Usuários</h5>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Usuário</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item:${lista}">
+
+					<td><a href="/usuario/__${item.id}__"
+						th:href="@{/usuario/__${item.id}__}" th:text="${item.nome}"></a></td>
+					<td th:text="${item.login}"></td>
+					<td><a class="btn btn-secondary"
+						href="/usuario/reset/${item.id}"
+						th:href="@{/usuario/reset/__${item.id}__}">Reset Senha</a></td>
+					<td><a class="btn btn-danger" th:name="${item.login}"
+						th:onclick="|del(${item.id},this.name)|">Excluir</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="modal modal-warning fade" id="modal-mensagem">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Mensagem</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p th:text="${mensagem}" id="msg"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" id="tutorModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body" id="modalInformcao"></div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js"
+		integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P"
+		crossorigin="anonymous"></script>
+	<script th:inline="javascript">
+		var isInlineEdit = [[${ mensagem } != null ? true : false]];
+
+				function del(id, nome) {
+					var texto = "Tem certeza da exclusão do usuário " + nome + "?";
+					texto = texto + "<p><p>";
+					texto=texto+'<div class="row justify-content-between">';
+					texto=texto+'<div class="col-5">';
+					texto = texto + "<a class='p-3 btn btn-primary' onclick='$(\"#tutorModal\").modal(\"hide\")'>Não</a>";
+					texto=texto+'</div><div class="col-2">';
+					texto = texto + "<a class='p-3 btn btn-danger' href='/usuario/delete/" + id + "'>Sim</a>";
+					texto=texto+'</div></div>';
+
+					$("#modalInformcao").html(texto);
+					$("#tutorModal").modal("show");
+				}
+		if (isInlineEdit) {
+			$(window).on('load', function () {
+				$('#modal-mensagem').modal('show');
+			});
+		}
+
+	</script>
+</body>
+</html>

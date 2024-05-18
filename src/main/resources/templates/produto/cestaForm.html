@@ -1,0 +1,170 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
+	integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt"
+	crossorigin="anonymous" />
+
+<title>Cesta</title>
+<link rel="icon" href="/images/icon.png" />
+</head>
+<body>
+
+	<div th:replace="fragmentos/menu"></div>
+	<div class="container" style="padding: 20">
+		<br />
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row border">
+					<div class="col-md-6">
+						<h5>Visual Pet Estética Canina</h5>
+						<h6>CNPJ 35.234.983/0001-05</h6>
+						<h6>Av. Protásio Alves nº.7195 - Alto Petropólis - Porto
+							Alegre/RS</h6>
+						<h6>Telefone: (51) 3334 0703</h6>
+					</div>
+					<div class="col-md-6">
+						<table>
+							<col width="200" />
+							<tr>
+								<td>Cliente</td>
+								<td><span th:text="${cesta.cliente.nome}"></span></td>
+							</tr>
+							<tr>
+								<td>CPF</td>
+								<td><span th:text="${cesta.cliente.cpf}"></span></td>
+							</tr>
+							<tr>
+								<td>Data da Compra</td>
+								<td><span
+									th:text="${#dates.format(cesta.data, 'dd/MM/yyyy HH:mm')}"></span></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<br />
+				<h6>Itens</h6>
+				<table class="table" id="cestaTabela">
+					<thead>
+						<tr>
+							<th>Item</th>
+							<th>Nome</th>
+							<th></th>
+							<th>Total</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item,i:${cesta.produtos}">
+							<td th:text="${i.count}"></td>
+							<td th:text="${item.nome}"></td>
+							<td><span th:text="${item.quantidade}"></span> X <span
+								th:text="|R$ ${item.precoVenda}|"></span></td>
+							<td th:text="|R$ __${item.quantidade}*${item.precoVenda}__|"
+								class="preco"></td>
+
+						</tr>
+					</tbody>
+
+					<tfoot>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td><span id="total">R$ 100,00</span></td>
+						</tr>
+					</tfoot>
+				</table>
+				<h6>Pagamento</h6>
+				<table class="table" id="pagamentoTabela">
+					<thead>
+						<tr>
+							<th></th>
+							<th>Transação</th>
+							<th>Venda</th>
+							<th>Texto</th>
+							<th>Bruto</th>
+							<th>Liquido</th>
+							<th>Compensação</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item,i:${cesta.caixas}">
+							<td th:text="${item.id}"></td>
+							<td th:text="${#dates.format(item.registro, 'dd/MM/yyyy HH:mm')}"></td>
+							<td th:text="${item.codigoVenda}"></td>
+							<td><a th:text="${item.texto}" th:href="@{/caixa/__${item.id}__}"></a></td>
+							<td class="valorBruto" th:text="|R$ ${item.valorBruto}|"></td>
+							<td class="valor" th:text="|R$ ${item.valor}|"></td>
+							<td th:text="${#dates.format(item.data, 'dd/MM/yyyy HH:mm')}"></td>
+
+						</tr>
+					</tbody>
+
+					<tfoot>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td><span id="totalpgto">R$ 100,00</span></td>
+							<td><span id="pgto">R$ 100,00</span></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row  justify-content-end">
+
+				<span
+					th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">01/01/2020</span>
+			</div>
+		</div>
+	</div>
+
+
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js"
+		integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P"
+		crossorigin="anonymous"></script>
+	<script th:inline="javascript">
+	 var isInlineEdit = [[${mensagem} != null ? true:false]];
+
+		var credito=0;
+		 $('.preco').each(function(){
+			 credito = credito + Number( $( this ).html().replace(/[^\d]+/g,''));
+		    });
+			$("#total").text("R$ " +  Number( credito/100 ).toFixed(2) );
+			credito=0;
+			 $('.valorBruto').each(function(){
+				 credito = credito + Number( $( this ).html().replace(/[^\d]+/g,''));
+			    });
+				$("#totalpgto").text("R$ " +  Number( credito/100 ).toFixed(2) );
+
+			credito=0;
+			 $('.valor').each(function(){
+				 credito = credito + Number( $( this ).html().replace(/[^\d]+/g,''));
+			    });
+				$("#pgto").text("R$ " +  Number( credito/100 ).toFixed(2) );
+ 		 
+	</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+<link th:replace="fragmentos/css"></link>
+
+<title>Fechamento de Caixa</title>
+<link rel="icon" href="/images/icon.png"></link>
+
+</head>
+<body>
+	<div th:replace="fragmentos/menu"></div>
+
+	<div>
+		<h4>Fechamento de Caixa</h4>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Data</th>
+					<th>Nº Venda</th>
+					<th>Forma pagamento</th>
+					<th>Entradas</th>
+					<th>Saídas</th>
+					<th>ObS</th>
+					<th>Registro</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item:${lista}">
+					<td th:text="${#dates.format(item.data, 'dd/MM/yyyy HH:mm')}"></td>
+					<td th:text="${item.codigoVenda}"></td>
+					<td><span th:text="${item.forma}">Dinheiro</span></td>
+
+
+					<td><span th:if="${item.tipo==1}?|R$ ${item.valor}|"
+						th:text="|R$ ${item.valor}|" class="credito"></span></td>
+					<td><span th:if="${item.tipo==0}?|R$ ${item.valor}|"
+						th:text="|R$ ${item.valor}|" class="debito"></span></td>
+
+					<td><a th:if="${item.cesta!=null}" th:text="${item.texto}"
+						th:href="@{/cesta/__${item.cesta.id}__}"></a> <span
+						th:if="${item.cesta==null}" th:text="${item.texto}"></span></td>
+					<td th:text="${#dates.format(item.registro, 'dd/MM/yyyy HH:mm')}"></td>
+				</tr>
+
+				<tr class="bg-dark">
+					<td><span class='text-white'
+						th:text="|Resultados: ${#lists.size(lista)}|"></td>
+					<td></td>
+					<td class="text-white">Totais</td>
+					<td><span id="totalCredito" class="text-white"></span></td>
+					<td><span id="totalDebito" class="text-danger"></span></td>
+					<td><span id="total" class="text-white"></span></td>
+					<td></td>
+				</tr>
+
+			</tbody>
+		</table>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Data</th>
+					<th>Nº Venda</th>
+					<th>Forma pagamento</th>
+					<th>Entradas</th>
+					<th>ObS</th>
+					<th>Registro</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item:${creditos}">
+					<td th:text="${#dates.format(item.data, 'dd/MM/yyyy HH:mm')}"></td>
+					<td th:text="${item.codigoVenda}"></td>
+					<td><span th:text="${item.forma}" class="forma_pag">Dinheiro</span></td>
+
+
+
+					<td><span th:if="${item.tipo==1}?|R$ ${item.valor}|"
+						th:text="|R$ ${item.valor}|" class="credito2"></span></td>
+
+					<td><a th:if="${item.cesta!=null}" th:text="${item.texto}"
+						th:href="@{/cesta/__${item.cesta.id}__}"></a> <span
+						th:if="${item.cesta==null}" th:text="${item.texto}"></span></td>
+					<td th:text="${#dates.format(item.registro, 'dd/MM/yyyy HH:mm')}"></td>
+				</tr>
+
+				<tr class="bg-dark">
+					<td><span class='text-white'
+						th:text="|Resultados: ${#lists.size(creditos)}|"></span></td>
+					<td></td>
+					<td class="text-white">Totais</td>
+					<td><span id="totalCredito2" class="text-white"></span></td>
+					<td><span id="total" class="text-white"></span></td>
+					<td></td>
+				</tr>
+
+			</tbody>
+		</table>
+	</div>
+
+	<div class="modal modal-warning fade" id="modal-mensagem">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Mensagem</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p th:text="${mensagem}"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div th:replace="fragmentos/js"></div>
+
+	<script th:inline="javascript">
+
+	var credito=0;
+	 $('.credito').each(function(){
+		 credito = credito + Number( $( this ).html().replace(/[^\d]+/g,''));
+	    });
+		$("#totalCredito").text("R$ " +  Number( credito/100 ).toFixed(2) );
+		
+		credito=0;
+		 $('.credito2').each(function(){
+			 credito = credito + Number( $( this ).html().replace(/[^\d]+/g,''));
+		    });
+			$("#totalCredito2").text("R$ " +  Number( credito/100 ).toFixed(2) );
+		
+		
+		var debito=0;
+		 $('.debito').each(function(){
+			 debito = debito + Number( $( this ).html().replace(/[^\d]+/g,''));
+		    });
+		 $("#totalDebito").text("R$ " + Number( debito/100 ).toFixed(2) );
+		 
+		 
+		 var total= 0;
+		 total=Number($("#totalCredito").html().replace(/[^\d]+/g,''))-Number($("#totalDebito").html().replace(/[^\d]+/g,'') );
+		 
+		 $("#total").text("R$ " +  Number( total/100 ).toFixed(2) );
+	
+	
+	function imprimir()
+	  {
+		$("#formulario").attr("action",[[@{/caixa/imprimir}]]);
+		$("#formulario").submit();
+	  }	
+	 var isInlineEdit = [[${mensagem} != null ? true:false]];
+	 
+	  if(isInlineEdit){
+		  $(window).on('load', function() {
+				$('#modal-mensagem').modal('show');
+			});
+	      }
+	</script>
+</body>
+</html>

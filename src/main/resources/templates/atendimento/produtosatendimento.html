@@ -1,0 +1,298 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="_csrf" th:content="${_csrf.token}" />
+
+
+<link th:replace="fragmentos/css"></link>
+<style type="text/css">
+a {
+	color: black;
+}
+</style>
+<title>Cesta</title>
+<link rel="icon" href="/images/icon.png" />
+</head>
+
+<body>
+	<div th:replace="fragmentos/menu"></div>
+	<div style="padding: 20">
+		<div class="row">
+
+			<div class="col-md-8">
+				<div class="row justify-content-between">
+					<div class="col-md-9">
+						<table class="table-sm">
+							<tr>
+								<td>ID:</td>
+								<td th:text="${atendimento.id}" id="id"></td>
+								<td width="50"></td>
+								<td>Data:</td>
+								<td
+									th:text="${#dates.format(atendimento.agenda, 'dd/MM/yyyy HH:mm')}"
+									id="agenda"></td>
+
+								<td width="50"></td>
+								<td style="font-weight: bold">Total:</td>
+								<td id="total" style="font-weight: bold"></td>
+							</tr>
+							<tr>
+								<td>Pet:</td>
+								<td th:text="${atendimento.pet.nome}" id="pet"></td>
+								<td></td>
+								<td>Serviço:</td>
+								<td th:text="${atendimento.servico.texto}" id="servico"></td>
+								<td></td>
+								<td>Venda:</td>
+								<td><input th:field="${atendimento.venda}" type="checkbox"
+									id="venda" onchange="venda(this.value)" /></td>
+							</tr>
+							<tr>
+								<td><a class="btn btn-warning"
+									th:onclick="|add_servico(__${atendimento.id}__)|"><img
+										src="/images/shopping_car.png"></a></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+
+						</table>
+					</div>
+					<div class="col-md-3">
+						<a class="m-1 p-2 col-md-12 btn btn-primary" href="#"
+							onclick="salvar()">Salvar</a> <a
+							class="m-1 p-2 col-md-12 btn btn-primary" id="btn_baixa"
+							th:href="@{/atendimento/baixarprodutos/__${atendimento.id}__}">Baixar
+							do Estoque</a> <a class="m-1 p-2 col-md-12 btn btn-secondary"
+							th:href="@{/atendimento/__${atendimento.id}__}">Voltar</a>
+					</div>
+				</div>
+
+				<div id="tabela"></div>
+			</div>
+			<div class="col-md-4">
+				<table id="resultado"></table>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="fragmentos/js"></div>
+	<script th:inline="javascript">
+	var lista=[];
+	
+	$
+		.ajax({
+		    url : "/produto/lista",
+		    success : function(result) {
+			console.log(result);
+			var tableInfo = $("#resultado")
+				.DataTable(
+					{
+					    data : result,
+					    language : {
+						url : "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+					    },
+					    columns : [
+						    {
+							data : "id",
+							title : "ID",
+							render : function(data,
+								type, row) {
+							    return "<a class='btn btn-warning'	onclick='"
+							    + "add(0,\""+row.nome+"\","+row.quantidade+",\""+row.precoVenda+"\","+row.id+")'>"
+							    +"<img alt='Add'"
+								    + " src='/images/shopping-cart-add-button_icon-icons.com_56132.png' width='16' heigth='16' /></a>";
+							}
+						    },
+						    {
+							data : "nome",
+							title : "Nome",
+							render : function(data,
+								type, row) {
+							    return "<a href='/produto/"+row.id+"'>"
+								    + data
+								    + "</a>";
+							}
+						    },
+						    {
+							data : "quantidade",
+							title : "Qnt."
+						    },
+						    {
+							data : "precoVenda",
+							title : "Preço (R$)",
+							render : function(data,
+								type, row) {
+							    var valor = String(data);
+							    return valor
+								    .replace(
+									    ".",
+									    ",");
+							}
+						    } ]
+					});
+		    }
+		});
+
+	atualizar();
+
+	function lista_contem(id) {
+	    var saida = -1;
+	    $.each(lista, function(index, value) {
+		if (lista[index].idProdutoOriginal === id) {
+		    saida = index;
+		}
+	    });
+	    return saida;
+	}
+	function remover(index) {
+	    lista.splice(index, 1);
+	    criar_tabela(lista, "tabela");
+	}
+
+	function diminuir(index) {
+	    var q = lista[index].quantidade - 1;
+	    if (q <= 0)
+		q = 0;
+	    lista[index] = {
+		id : lista[index].id,
+		idProdutoOriginal : lista[index].idProdutoOriginal,
+		nome : lista[index].nome,
+		quantidade : q,
+		preco : lista[index].preco
+	    };
+	    criar_tabela(lista, "tabela");
+	}
+
+	function add(id, nome, limitequantidade, precoVenda, idProdutoOriginal) {
+	    var i = lista_contem(idProdutoOriginal);
+	    if (i === -1) {
+		lista.push({
+		    id : id,
+		    idProdutoOriginal : idProdutoOriginal,
+		    nome : nome,
+		    quantidade : 1,
+		    preco : precoVenda
+		});
+	    } else {
+		var q = lista[i].quantidade + 1;
+		if (q >= limitequantidade) {
+		    q = limitequantidade;
+		}
+		lista[i] = {
+		    id : id,
+		    idProdutoOriginal : idProdutoOriginal,
+		    nome : nome,
+		    quantidade : q,
+		    preco : precoVenda
+		};
+	    }
+	    criar_tabela(lista, "tabela");
+	}
+	function atualizar() {
+	    $.ajax({
+		url : "/atendimento/getprodutos/" + $("#id").html(),
+		success : function(result) {
+		    lista = "";
+		    lista = result;
+		    criar_tabela(lista, "tabela");
+		}
+	    });
+	}
+	function venda(valor) {
+	    var n = $("input:checked").length;
+	    $.ajax({
+		url : "/atendimento/venda",
+		data : {
+		    id : $("#id").html(),
+		    venda : n
+		},
+		success : function(result) {
+		    $("#venda").val(result);
+		    var msg = "Registrado como venda.";
+		    if (result === false)
+			msg = "Removido do registro de venda aditada.";
+		    alert(msg);
+		}
+	    });
+	}
+	function salvar() {
+	    var token = $("meta[name='_csrf']").attr("content");
+	    $.ajax({
+		type : 'POST',
+		headers : {
+		    'X-CSRF-TOKEN' : token
+		},
+		url : "/atendimento/salvarprodutos",
+		dataType : 'json',
+		contentType : 'application/json',
+		data : JSON.stringify({
+		    id : $("#id").html(),
+		    lista : lista
+		}),
+		success : function(result) {
+		    lista = result;
+		    alert("Itens salvos com sucesso.");
+		    criar_tabela(lista, "tabela");
+		}
+	    });
+	}
+	function criar_tabela(dados, name_div) {
+	    $("#" + name_div).html("");
+	    var total = 0;
+	    var table = $('<table></table>').addClass("table");
+	    var texto = "";
+	    var row;
+	    for (var i = 0; i < dados.length; i++) {
+		row = $('<tr></tr>');
+
+		var link = $("<a />", {
+		    href : "/produto/" + dados[i].idProdutoOriginal,
+		    text : dados[i].nome
+		});
+		var rowData = $('<td></td>').append(link);
+		row.append(rowData);
+
+		rowData = $('<td></td>').text(
+			dados[i].quantidade + "x R$ "
+				+ Number(dados[i].preco).toFixed(2));
+		row.append(rowData);
+
+		rowData = $('<td></td>').text(
+			"R$ "
+				+ Number(dados[i].preco * dados[i].quantidade)
+					.toFixed(2));
+		total = total + dados[i].preco * dados[i].quantidade;
+		row.append(rowData);
+
+		rowData = $("<td></td>");
+		if (dados[i].quantidade > 1) {
+		    var a = $("<a />", {
+			onclick : "diminuir(" + i + ")"
+		    }).addClass("btn").append($("<img/>", {
+			src : "/images/atendimentos/minus.png"
+		    }));
+		    rowData.append(a);
+		}
+
+		var a = $("<a />", {
+		    onclick : "remover(" + i + ")"
+		}).addClass("btn").append($("<img/>", {
+		    src : "/images/atendimentos/erro.png"
+		}));
+		rowData.append(a);
+		row.append(rowData);
+		table.append(row);
+	    }
+	    $("#" + name_div).append(table);
+	    $("#total").text("R$ " + Number(total).toFixed(2));
+	}
+    </script>
+</body>
+</html>

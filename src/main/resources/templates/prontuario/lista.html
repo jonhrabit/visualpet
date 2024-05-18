@@ -1,0 +1,116 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+<link th:replace="fragmentos/css"></link>
+<title>Prontuários</title>
+
+<link rel="icon" href="/images/icon.png"></link>
+
+</head>
+<body>
+	<div th:replace="fragmentos/menu"></div>
+
+	<div>
+		<h2>Prontuários</h2>
+		<div id="resultado">
+			<table id='tabela' class="table table-sm"></table>
+		</div>
+	</div>
+
+	<div class="modal" id="tutorModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body"></div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="fragmentos/js"></div>
+
+	<script th:inline="javascript">
+	
+	var prontuarios =[[${prontuarios}]];
+	var t = $("#tabela").DataTable({
+			data : prontuarios,
+			language : {
+			    "url" : "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+			},
+			columns : [
+				{
+				    data : "id",
+				    title : "Id",
+				    render: function ( data, type, row ) {
+					    return "<a href='/prontuario/"+data+"'>"+data+"</a>";
+					}
+				},
+				{
+				    data : "data",
+				    title : "Data",
+					    render: function ( data, type, row ) {
+						let t = data.split("T");
+						let d = t[0].split("-");
+						return d[2]+"/"+d[1]+"/"+d[0];
+						
+					    }
+				},
+				{
+				    data : "pet.nome",
+				    title : "Pet",
+				    render: function ( data, type, row ) {
+					    return "<a href='/pet/"+row.pet.id+"'>"+data+"</a>";
+					}
+				},
+				{
+				    data : "pet.tutor.nome",
+				    title : "Tutor",
+				    render: function ( data, type, row ) {
+					    return "<a href='/cliente/"+row.pet.tutor.id+"'>"+data+"</a>";
+					}
+				} ,
+				{
+				    data : "usuario",
+				    title : "Veterinário"
+				},
+				{
+				    data: "id",
+				    title : "",
+				    render: function ( data, type, row, meta ) {
+				        return '<a class="btn btn-danger" onclick="del('+data+','+meta.row+')">Excluir</a>';
+				    }
+				}]
+		    });
+	
+	function del(id,linha) {
+		var texto = "Tem certeza da exclusão do prontuário " + id + "?";
+		texto = texto + "<p><p>";
+		texto = texto
+				+ "<a class='btn btn-primary' onclick='$(\"#tutorModal\").modal(\"hide\")'>Não</a>";
+		texto = texto
+				+ "<a class='btn btn-danger' onclick='deletar("+id+","+linha+")'>Sim</a>";
+
+		$(".modal-body").html(texto);
+		$("#tutorModal").modal("show");
+	}
+		
+	function deletar(id,linha){
+	    $
+		.ajax({
+		    url : "/prontuario/deletar/" + id,
+		    success : function(result) {
+				if(result){
+				    t.row(linha).remove().draw();
+				    $("#tutorModal").modal("hide");
+				    
+				    alert("Prontuário deletado com sucesso.");
+				    
+				}
+		    }
+		});
+	}
+		
+	</script>
+</body>
+</html>

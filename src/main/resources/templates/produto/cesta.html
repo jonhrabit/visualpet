@@ -1,0 +1,240 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+<meta name="_csrf" th:content="${_csrf.token}" />
+
+
+<link th:replace="fragmentos/css"></link>
+
+<style type="text/css">
+a {
+	color: black;
+}
+</style>
+<title>Cesta</title>
+<link rel="icon" href="/images/icon.png"></link>
+</head>
+
+<body>
+	<div th:replace="fragmentos/menu"></div>
+	<div style="padding: 20">
+		<div class="row">
+
+			<div class="col-md-6">
+				<div class="row justify-content-between">
+					<div class="col-md-4">
+						<div class="row">
+							<a class="m-1 p-2 btn btn-primary" th:href="@{/cesta/reset}"><img
+								alt="esvaziar"
+								src="/images/shopping-cart-cancel-button_icon-icons.com_56130.png" /></a>
+							<button type="button" class="m-1 p-2 btn btn-primary"
+								data-toggle="modal" data-target="#modalExemplo">
+								<img alt="Pagar"
+									src="/images/money-bills-and-coins-stack_icon-icons.com_56169.png" />
+							</button>
+							<div class="m-2 d-sm-block d-md-none">
+								<span class="total" style="font-size: 20px; font-weight: bold">R$
+									100,00</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-6 d-none d-md-table-cell">
+						<span class="total" style="font-size: 45px; font-weight: bold">R$
+							100,00</span>
+					</div>
+				</div>
+
+				<div id="tabelaCesta"></div>
+			</div>
+			<div class="col-md-6">
+				<div>
+					<table id="tabela"></table>
+				</div>
+				<div id="resultado"></div>
+			</div>
+
+
+		</div>
+	</div>
+
+	<!-- Mensagens -->
+	<div class="modal modal-warning fade" id="modal-mensagem">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Mensagem</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p th:text="${mensagem}" id="msg"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Combrança -->
+	<div class="modal fade" id="modalExemplo" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Pagamento</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Fechar">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label for="forma">Valor</label>
+								<div class="input-group-prepend">
+									<span class="input-group-text">R$</span> <input id="valor"
+										class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div>
+								<label for="saldo">Saldo</label>
+								<h3>
+									<strong id="saldo" class="total"></strong>
+								</h3>
+								<input id="saldoI" type="hidden" />
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group" id="ff">
+								<label for="forma">Forma de Pagamento</label><select
+									onchange="seila(this.value)" class="form-control" name="forma"
+									id="forma">
+								</select>
+							</div>
+						</div>
+						<div class="col-md-4" id="divVezes">
+							<div class="form-group">
+								<label for="forma">Vezes</label><select class="form-control"
+									name="vezes" id="vezes">
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="form-group">
+
+							<label for="cliente">Tutor</label>
+							<div th:if="${idCliente}!=null">
+								<select id="clienteId" name="clienteId" class="form-control">
+									<option th:each="cliente : ${listaClientes}"
+										th:value="${cliente.id}" th:text="${cliente.nome}"
+										th:selected="${cliente.id}==${idCliente}"></option>
+								</select>
+							</div>
+
+							<div th:if="${idCliente}==null">
+								<select id="clienteId" name="cliente" class="form-control">
+									<option th:each="cliente : ${listaClientes}"
+										th:value="${cliente.id}" th:text="${cliente.nome}"></option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Fechar</button>
+					<button type="submit" class="btn btn-primary" form="form_pgt"
+						id="btn_pagar" onclick="pagar()">Confirmar pagamento</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="fragmentos/js"></div>
+
+	<script src="/js/cesta.js"></script>
+
+	<script th:inline="javascript">
+		var cesta = [];
+		var pgto =[[${listaFormaPagamentos}]];
+		formas_de_pagamento("#forma");
+		
+		atualizar();
+		
+		$('#ff option[value="0"]').prop('selected', true);
+		
+		var isInlineEdit = [[${ mensagem } != null ? true : false]];
+
+		$("#divVezes").hide();
+		if (isInlineEdit) {
+			$(window).on('load', function () {
+				$('#modal-mensagem').modal('show');
+			});
+		}
+		
+		
+		$.ajax({
+			url : "/produto/lista",
+			success : function(result) {
+				var tableInfo =  $("#tabela")
+				.DataTable(
+					{
+					    data : result,
+					    order:[1,"cresc"],
+					    language : {
+						url : "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+					    },
+					    columns : [
+						{
+							data : "id",
+							title : "ID",
+							render: function ( data, type, row ) {
+							    if(row.quantidade>0){
+								return "<a class='btn btn-warning'	onclick='add("
+								    + data
+								    + ")'><img alt='Add'"
+								    + " src='/images/shopping-cart-add-button_icon-icons.com_56132.png' width='8' heigth='8' /></a>";
+							    }else{
+								return "";
+							    }
+						}
+						},
+						{
+						    data : "nome",
+						    title : "Nome",
+						    render: function(data, type, row){
+					                return "<a href='/produto/"+row.id+"'>"+data+"</a>";
+					            }
+						},{
+							data : "quantidade",
+							title : "Qnt."
+						},{
+							data : "precoVenda",
+							title : "Preço (R$)",
+							render: function(data,type,row){
+							    var valor = String(data);
+							    return valor.replace(".",",");
+							}
+						}]
+					});
+			}
+			});
+			    
+		
+
+	</script>
+</body>
+</html>

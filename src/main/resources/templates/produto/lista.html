@@ -1,0 +1,150 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+<meta name="_csrf" th:content="${_csrf.token}"></meta>
+<!-- ... -->
+
+<link th:replace="fragmentos/css"></link>
+
+<title>Estoque</title>
+
+<link rel="icon" href="/images/icon.png" />
+
+</head>
+<body>
+	<div th:replace="fragmentos/menu"></div>
+
+	<div class="m-3">
+		<div>
+			<a class="btn btn-secondary" data-toggle="collapse"
+				href="#multiCollapseExample1" role="button" aria-expanded="false"
+				aria-controls="multiCollapseExample1">Entrada</a>
+		</div>
+
+		<div class="col">
+			<div class="collapse multi-collapse" id="multiCollapseExample1">
+				<div class="card card-body">
+					<form th:action="@{/estoque/import}" method="POST"
+						enctype="multipart/form-data">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="nome">Nota Fiscal:</label> <input
+										class="form-control" type="file" name="file" /> <input
+										id="crsf" type="hidden" th:name="${_csrf.parameterName}"
+										th:value="${_csrf.token}" /> <span>* para a correta
+										importação o produto deve conter o mesmo código da nota
+										fiscal.</span>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<button type="submit" class="p-2 btn btn-primary">Enviar</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+	<div class="container">
+
+		<table id="tabela"></table>
+
+	</div>
+	<div id="lista"></div>
+
+	<div th:replace="fragmentos/js"></div>
+	<script th:inline="javascript">
+	var lista = [[${lista}]];
+	console.log(lista);
+	var tabela = $("#tabela")
+		.DataTable(
+			{
+			    data : lista,
+			    language : {
+				url : "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+			    },
+			    columns : [
+				    {
+					data : "id",
+					title : "ID",
+					render : function(data, type, row) {
+					    return "<a href='/produto/"+data+"'>"
+						    + data + "</a>";
+					}
+				    },
+				    {
+					data : "nome",
+					title : "Nome"
+				    },
+				    {
+					data : "codigo",
+					title : "Código"
+				    },
+				    {
+					data : "ncm",
+					title : "NCM"
+				    },
+				    {
+					data : "laboratorio",
+					title : "Laboratório"
+				    },
+				    {
+					data : "precoVenda",
+					title : "Preço"
+				    },
+				    {
+					data : "quantidade",
+					title : "Qtn"
+				    },
+				    {
+					data : "validadeMenor",
+					title : "Validade",
+					render : function(data, type, row) {
+					    if (type === "sort"
+						    || type === "type") {
+						return data;
+					    }
+					    if (data == null)
+						return "";
+					    return moment(data).format(
+						    "DD/MM/YYYY");
+					}
+				    },
+				    {
+					data : "id",
+					title : "",
+					render : function(data, type, row) {
+					    return "<a class='btn btn-danger' onclick='excluir("
+						    + row.id
+						    + ",\""
+						    + row.nome
+						    + "\")'>Excluir</a>";
+					}
+				    } ]
+			});
+
+	function excluir(id, nome) {
+	    if (confirm("Excluir o produto " + nome + "?")) {
+		$.ajax({
+		    url : "/produto/" + id,
+		    headers : {
+			'X-CSRF-Token' : $("meta[name='_csrf']")
+				.attr("content")
+		    },
+		    type : "DELETE",
+		    success : function(result) {
+			alert(result);
+			location.reload();
+		    }
+		});
+	    }
+	}
+    </script>
+
+</body>
+</html>

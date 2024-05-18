@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+	integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+	crossorigin="anonymous" />
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+	integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+	crossorigin="anonymous"></script>
+
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+	integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+	crossorigin="anonymous"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+	integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+	crossorigin="anonymous"></script>
+
+<title>Prontuários</title>
+
+</head>
+<body>
+	<div th:replace="fragmentos/menu"></div>
+
+	<div class="container" style="padding: 20">
+		<h4>Prontuários</h4>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Data</th>
+					<th>Pet</th>
+					<th>Tutor</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item:${lista}">
+
+					<td><a href="#" th:href="@{/prontuario/__${item.id}__}"
+						th:text="${item.id}"></a></td>
+					<td th:text="${#dates.format(item.data, 'dd/MM/yyyy HH:mm')}"></td>
+					<td><a href="/pet/__${item.pet.id}__"
+						th:href="@{/pet/__${item.pet.id}__}" th:text="${item.pet.nome}"></a></td>
+						
+					<td><a href="/cliente/__${item.pet.proprietario.id}__"
+						th:href="@{/cliente/__${item.pet.proprietario.id}__}" th:text="${item.pet.proprietario.nome}"></a></td>
+						
+						
+					<td><a href="/prontuario/arquivar/__${item.id}__"
+						th:href="@{/prontuario/arquivar/__${item.id}__}">Arquivar</a></td>
+				</tr>
+			</tbody>
+		</table>
+
+
+	</div>
+
+</body>
+</html>

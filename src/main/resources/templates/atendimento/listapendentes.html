@@ -1,0 +1,93 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
+	integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt"
+	crossorigin="anonymous" />
+
+<title>Serviços Confiados</title>
+<link rel="icon" href="/images/icon.png" />
+<style type="text/css">
+a {
+	color: black;
+}
+</style>
+</head>
+
+<body>
+	<div th:replace="fragmentos/menu"></div>
+
+	<div class="container" style="padding: 20">
+		<div class="row">
+			<h3>Pagamentos a receber</h3>
+			<div class="col-2"></div>
+			<div>
+				Resultados: <span id="count"></span> Total: <span id="total"></span>
+			</div>
+		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Data</th>
+					<th class="d-none d-md-table-cell">Serviço</th>
+					<th class="d-none d-md-table-cell">Pet</th>
+					<th>Tutor</th>
+					<th class="d-none d-md-table-cell">Celular</th>
+					<th>Valor</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item:${lista}">
+					<td><a
+						th:text="${#dates.format(item.agenda, 'dd/MM/yyyy')}"
+						th:href="@{/atendimento/__${item.id}__}"></a></td>
+
+					<td class="d-none d-md-table-cell" th:text="${item.servico.texto}"></td>
+
+					<td class="d-none d-md-table-cell"><a href="#" th:text="${item.pet.nome}"
+						th:href="@{/pet/__${item.pet.id}__}">Yoshe</a></td>
+					<td><a href="#" th:text="${item.pet.tutor.nome}"
+						th:href="@{/cliente/__${item.pet.tutor.id}__}">Mario</a></td>
+
+					<td class="d-none d-md-table-cell" th:text="${item.pet.tutor.celular}"></td>
+					<td th:if="${item.valor!=null}" th:text="|R$ ${item.valor}|"></td>
+					<td><a href="#" th:onclick="|add_servico(${item.id})|"
+						 class="btn btn-warning d-print-none"><img width="16" height="16" src="/images/shopping_car.png"></a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js"
+		integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P"
+		crossorigin="anonymous"></script>
+
+	<script th:inline="javascript">
+	var lista=[[${lista}]];
+	console.log(lista);
+	$("#count").text(lista.length);
+	var total=0;
+	for(var i=0;i<lista.length;i++){
+		console.log(lista[i].valor);
+		total=total+lista[i].valor;
+	}
+
+	$("#total").text("R$ "+Number(total).toFixed(2));
+	</script>
+
+</body>
+</html>

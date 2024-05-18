@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script src="../jquery.print.js"></script>
+<title>Certidão Negativa</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="../css/certidao.css" rel="stylesheet" type="text/css">
+<link href="../css/print.css" rel="stylesheet" type="text/css" media="print">
+<script>
+function imprime() {	
+	if ( $.browser.msie )
+	{
+		myWindow=window.open('','','width=700,height=900,toolbar=yes');
+		myWindow.document.write(document.getElementById('iframe_content').innerHTML);
+		myWindow.focus();
+		myWindow.contentWindow.focus();
+		myWindow.focus();
+		window.focus();
+		document.getElementById('area_imprimir').style.display='none';
+		myWindow.print();
+		window.print();
+	}
+	else
+	{
+		document.forms['form1'].elements['btnImprimir'].visibility='hidden';
+		document.getElementById('area_imprimir').style.display='none';
+		$('#iframe_content').print();
+	}
+}
+</script>
+</head>
+
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<form name="form1"  id="form1" method="post" >
+  <div align="center">
+<span id="area_imprimir"><img src="../imagens/impressao.gif" width="20" height="18" border="0">
+<input type="submit" id="btnImprimir" onclick="imprime()" name= "btnImprimir" value="Imprimir"></span>
+<input type='submit' style='visibility:hidden' name='btnVoltar' id='btnVoltar' value="Voltar">
+  </div>
+<div id='iframe_content' name='iframe_content'>
+<script>
+	function imprimeme()
+	{
+		window.print();
+	}
+</script>
+
+<!--<div id="msg_print">Para impressão no navegador Internet Explorer pressione (CTRL + P).</div>-->
+<table width="600" border="0" cellspacing="0" cellpadding="0" name="iframe">
+    <tr> 
+      <td valign="top"><center><span><img src='../imagens/brasao_pb.gif' width='59' height='57'></span></center>
+        <p align="center" class="txtsecao"><b>PODER JUDICI&Aacute;RIO<br>
+          JUSTI&Ccedil;A MILITAR DA UNI&Atilde;O</b></p>
+        <p align="center" class="txtsecao">
+        	<b>CERTID&Atilde;O DE A&Ccedil;&Otilde;ES CRIMINAIS</b>
+        	<b></b>
+        	<br>
+          57109631        </p>
+        <b></b> <b> 
+        <br />
+        <p class="formulario">Certificamos que contra</p>
+        </b> 
+        <p class="formulario">Nome: <b> 
+          JOÃO FELIPE PEREIRA XAVIER          </b></p>
+        <p class="formulario">CPF: <b> 
+          012.462.450-27          </b></p>
+        <p class="formulario">Data de Nascimento: <b> 
+          03/03/1987          </b></p>
+        <p class="formulario">Nome da m&atilde;e: <b> 
+          ANA REGINA LANGA PEREIRA          </b></p>
+        <br> <p align="center" class="nadaconsta"><b>NADA CONSTA</b></p>
+        
+        <br> 
+        
+        <p class="formulario" align="justify">
+        	no que se refere a A&ccedil;&otilde;es Penais Militares em andamento ou com senten&ccedil;a condenat&oacute;ria transitada
+        	em julgado e/ou Processo de Execução Penal em andamento na Justi&ccedil;a Militar da Uni&atilde;o.
+        </p>
+        
+        <p>&nbsp;</p>
+        
+        <p class="formulario" align="justify">Certid&atilde;o emitida em 
+          04/08/2020          &agrave;s 
+          17:07:36          (hora de Bras&iacute;lia) com base na Resolu&ccedil;&atilde;o n&ordm; 
+          149, de 03/08/2007, do Superior Tribunal Militar, publicada no DJ de 
+          17/08/2007.</p>
+        <p class="formulario">Os dados pessoais acima s&atilde;o de responsabilidade 
+          do solicitante da certid&atilde;o.</p>
+        <p class="formulario" align="justify">A autenticidade desta certid&atilde;o 
+          poder&aacute; ser confirmada no endere&ccedil;o <a href= http://www.stm.jus.br>http://www.stm.jus.br</a> 
+          (Menu &quot;Certid&atilde;o Negativa/Autentica&ccedil;&atilde;o de Certid&atilde;o&quot;) 
+          informando o N&uacute;mero de Controle e o CPF do emissor da Certid&atilde;o.</p>
+        <br>
+        <table width="550" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr> 
+            <td>
+            	<div style="text-align: center;">
+	            	<span class="formulario">
+	            		<b>Certid&atilde;o gratuita e de &acirc;mbito nacional</b>
+	                </span>
+                </div>
+				<div style="text-align: center;">                
+	            	<span class="formulario" style="text-align: center;">
+	            		<b>Esta certid&atilde;o &eacute; v&aacute;lida por 90 dias</b>
+	                </span>
+                </div>
+            </td>
+          </tr>
+        </table>
+        
+        </td>
+    </tr>
+  </table>
+<p>&nbsp;</p>
+</div>
+</form>
+</body>
+</html>

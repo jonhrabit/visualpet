@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
+	integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt"
+	crossorigin="anonymous" />
+
+<title>Busca de Atendimentos</title>
+<link rel="icon" href="/images/icon.png" />
+<style type="text/css">
+a {
+	color: black;
+}
+</style>
+</head>
+<body>
+	<div th:replace="fragmentos/menu"></div>
+
+	<div class="container" style="padding: 20">
+		<h4>Busca</h4>
+		<div class="container">
+			<form th:action="@{/atendimento/consulta}"
+				th:object="${atendimentoConsultaView}" id="form_atendimento"
+				method="GET">
+				<div class="row">
+					<div class="col-md-3">
+						<div class="form-group">
+							<label for="datainicial">Agenda Inicial</label> <input
+								type="date" class="form-control" th:field="*{inicio}" />
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<label for="datafim">Agenda Final</label> <input type="date"
+								class="form-control" th:field="*{fim}" />
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary">Consultar</button>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<div class="form-group">
+							<label for="situacao">Situação</label><select
+								class="form-control" th:field="*{situacao}">
+								<option value="" selected="selected"></option>
+								<option th:each="situacaoAtItem : ${situacaoAt}"
+									th:value="${situacaoAtItem}"
+									th:text="${situacaoAtItem.descricao}"></option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="tipo">Serviço</label> <select th:field="*{servico}"
+								class="form-control">
+								<option value="" selected="selected"></option>
+								<option th:each="servico: ${listaservico}"
+									th:value="${servico.id}" th:text="${servico.texto}"></option>
+							</select>
+						</div>
+					</div>
+
+					<div class="col-md-3">
+						<div class="form-group">
+							<p id='resultado'></p>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Data</th>
+					<th>Celular</th>
+					<th>Pet</th>
+					<th>Tutor</th>
+					<th>Celular</th>
+					<th>Valor</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item:${atendimentoConsultaView.resultado}"
+					class="linha">
+					<td><a
+						th:text="${#dates.format(item.agenda, 'dd/MM/yyyy HH:mm')}"
+						th:href="@{/atendimento/__${item.id}__}"></a></td>
+
+					<td class="d-none d-md-block" th:text="${item.servico.texto}"></td>
+
+					<td><a
+						class="link" href="#" th:text="${item.pet.nome}"
+						th:href="@{/pet/__${item.pet.id}__}">Yoshe</a></td>
+					<td><a class="link" href="#" th:text="${item.pet.tutor.nome}"
+						th:href="@{/cliente/__${item.pet.tutor.id}__}">Mario</a></td>
+
+					<td th:text="${item.pet.tutor.celular}"></td>
+					<td th:if="${item.valor!=null}" th:text="|R$ ${item.valor}|"></td>
+					<td><a th:if="${item.situacao.id==4}"
+						th:href="@{/cesta/addservico/__${item.id}__}"
+						class="btn
+									btn-primary d-print-none">Receber</a>
+						<p th:if="${item.situacao.id==3}" th:text="Cancelado"
+							class="text-danger"></p>
+						<p th:if="${item.situacao.id==2}" th:text="Finalizado"
+							class="text-warning"></p>
+						<p th:if="${item.situacao.id==1}" th:text="EmAtendimento"
+							class="text-success"></p>
+						<p th:if="${item.situacao.id==0}" th:text="Agenda"
+							class="text-primary"></p></td>
+
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+	<div class="modal modal-warning fade" id="modal-mensagem">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Mensagem</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p th:text="${mensagem}"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js"
+		integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P"
+		crossorigin="anonymous"></script>
+
+	<script th:inline="javascript">
+	 var isInlineEdit = [[${mensagem} != null ? true:false]];
+	 $("#resultado").text(function(){
+		 var l = 0;
+		 $(".linha").each(function(){
+			 l++;
+		 });
+		 return "resultados: " + l;
+	 });
+	  if(isInlineEdit){
+		  $(window).on('load', function() {
+				$('#modal-mensagem').modal('show');
+			});
+	  }
+	  
+	  
+	</script>
+
+</body>
+</html>

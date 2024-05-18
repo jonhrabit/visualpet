@@ -1,0 +1,149 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+	integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+	crossorigin="anonymous" />
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+	integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+	crossorigin="anonymous"></script>
+
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+	integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+	crossorigin="anonymous"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+	integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+	crossorigin="anonymous"></script>
+
+<title>Cadastro Pet</title>
+</head>
+<body>
+
+	<div th:replace="fragmentos/menu"></div>
+	<div class="container" style="padding: 20">
+
+		<form th:object="${pet}" th:action="@{/pet/salvar}" method="POST">
+			<input name="id" id="id" th:field="*{id}" type="hidden" /> <input
+				type="hidden" th:name="${_csrf.parameterName}"
+				th:value="${_csrf.token}" />
+
+
+
+			<div class="row">
+				<div class="col-md-11">
+					<h4>Pet</h4>
+				</div>
+			</div>
+
+			<div class="row">
+
+				<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+					<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="nome">Nome</label> <input class="form-control"
+							type="text" th:field="*{nome}" id="nome" />
+					</div>
+				</div>
+
+				<div class="col-md-3">
+					<div class="form-group">
+						<label for="nome">Especie</label> <select class="form-control"
+							th:field="*{especie}" id="especie">
+							<option value="Cão">Cão</option>
+							<option value="Gato">Gato</option>
+							<option value="Outros">Outros</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="col-md-3">
+					<div class="form-group">
+						<label for="tipo">Sexo</label><select class="form-control"
+							th:field="*{sexo}" id="sexo">
+							<option value="1">Macho</option>
+							<option value="0">Femea</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="col-md-3">
+					<div class="form-group">
+						<label for="tipo">Raça</label> <input class="form-control"
+							type="text" th:field="*{raca}" id="raca" />
+					</div>
+				</div>
+
+
+				<div class="col-md-3">
+					<div class="form-group">
+						<label for="tipo">Pelagem</label> <input class="form-control"
+							type="text" th:field="*{pelagem}" id="pelagem" />
+					</div>
+				</div>
+
+				<div class="col-md-3">
+					<div class="form-group">
+						<label for="data">Data de Nascimento</label> <input type="date"
+							class="form-control form-control" id="data"
+							th:field="*{nascimento}" />
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="form-group">
+						<label for="tipo">Observações</label> <input class="form-control"
+							type="text" th:field="*{obs}" id="obs" />
+					</div>
+				</div>
+
+				<div class="col-md-10">
+					<div class="form-group">
+						<label for="data">Tutor</label> <select id="proprietario"
+							class="form-control" th:field="*{proprietario}">
+							<option th:each="cliente : ${listaclientes}"
+								th:value="${cliente.id}" th:text="${cliente.nome}"></option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-42">
+					<div class="form-group">
+						<a class="p-4 btn btn-info" th:href="@{/cliente}">Cadastrar Tutor</a>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary" id="salvar">Salvar</button>
+					</div>
+				</div>
+
+				<table class="table-sm">
+					<thead>
+						<tr>
+							<th>Data</th>
+							<th>Tipo</th>
+							<th>Informação</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="item:*{informacoes}">
+							<td th:text="${#dates.format(item.data, 'dd/MM/yyyy HH:mm')}"></td>
+							<td th:text="${item.tipo}"></td>
+							<td th:text="${item.texto}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+	</div>
+
+</body>
+</html>

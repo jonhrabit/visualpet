@@ -1,0 +1,251 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+<link th:replace="fragmentos/css"></link>
+
+<script src="/js/processamentos/atendimentos_por_servico.js"></script>
+<script src="/js/processamentos/atendimentos_por_cliente.js"></script>
+<script src="/js/processamentos/vendas.js"></script>
+<script src="/js/processamentos/ticket.js"></script>
+<script src="/js/processamentos/lucro.js"></script>
+<script src="/js/processamentos/fix_bug_vendabruto.js"></script>
+
+<title>Processamento</title>
+<link rel="icon" href="/images/icon.png" />
+</head>
+<body>
+
+	<div th:replace="fragmentos/menu"></div>
+	<div class="row">
+		<div class="col-3 bg-warning d-print-none">
+			<ul class="list-group">
+				<li class="m-1 btn btn-primary" onclick="semcodigo()"
+					sec:authorize="hasRole('ROLE_DEBUG')"><a>Caixas sem código
+						de venda</a></li>
+				<li class="m-1 btn btn-primary" onclick="form_mes_ano('#resultado')"><a>Atendimentos
+						por Serviço</a></li>
+				<li class="m-1 btn btn-primary"
+					onclick="form_mes_ano_clientes('#resultado')"><a>Atendimentos
+						por Cliente</a></li>
+				<li class="m-1 btn btn-primary" onclick="form_vendas()"><a>Vendas</a></li>
+				<li class="m-1 btn btn-outline-dark"
+					sec:authorize="hasRole('ROLE_DEBUG')"><a href="#"
+					onclick="fix()">Fix Venda Bruta</a></li>
+			</ul>
+		</div>
+		<div class="col-9" id="resultado">
+			<div>
+				<form th:action="@{/upload}" method="POST" id="upload"
+					enctype="multipart/form-data">
+					Importar arquivo de extrato <input class="form-control" type="file"
+						name="file" />
+					<button type="submit" class="p-2 btn btn-primary" form="foto"
+						id="btnSubmit">Enviar</button>
+					<input id="crsf" type="hidden" th:name="${_csrf.parameterName}"
+						th:value="${_csrf.token}" />
+
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="fragmentos/js"></div>
+
+	<script type="text/javascript"
+		src="https://www.gstatic.com/charts/loader.js"></script>
+
+	<script type="text/javascript">
+	$(document).ready(function() {
+	    $("#btnSubmit").click(function(event) {
+		dialogo_loading()
+		event.preventDefault();
+
+		var form = $('#upload')[0];
+		var data = new FormData(form);
+
+		$("#btnSubmit").prop("disabled", true);
+
+		$.ajax({
+		    type : "POST",
+		    enctype : 'multipart/form-data',
+		    url : "/upload/",
+		    data : data,
+		    processData : false, // impedir que o jQuery tranforma a "data" em querystring
+		    contentType : false, // desabilitar o cabeçalho "Content-Type"
+		    cache : false, // desabilitar o "cache"
+		    success : function(data) {
+			console.log(data);
+			$("#dialogo").modal("hide");
+			criar_tabela_extrato(data, "#resultado")
+			$("#btnSubmit").prop("disabled", false);
+		    },
+		    error : function(e) {
+
+			$("#dialogo").modal("hide");
+			console.log(e);
+			$("#btnSubmit").prop("disabled", false);
+		    }
+		});
+	    });
+	});
+	function semcodigo() {
+	    $.ajax({
+		url : "/consultas/caixasemcodigo",
+		success : function(result) {
+		    console.log(result);
+		    criar_tabela_caixa(result, "#resultado");
+		}
+	    });
+	}
+
+	function criar_tabela_caixa(dados, div_name) {
+	    $(div_name).html("");
+	    var table = $('<table></table>').addClass("table");
+	    var row = $('<th><td>Compensação</td><td>Transação</td><td>Forma</td><td>Cesta</td><td>Bruto</td><td>Taxa</td><td>Liquido</td></th>');
+	    table.append(row);
+	    for (var i = 0; i < dados.length; i++) {
+		row = $('<tr></tr>');
+
+		var link = $("<a />", {
+		    href : "/caixa/" + dados[i].id,
+		    text : i + 1
+		});
+		var rowData = $('<td></td>').append(link);
+		row.append(rowData);
+
+		let d = new Date(dados[i].data);
+		let dataFormatada = d.getDate().toString().padStart(2, '0')
+			+ '/' + (d.getMonth() + 1).toString().padStart(2, '0')
+			+ '/' + d.getFullYear() + " "
+			+ d.getHours().toString().padStart(2, '0') + ":"
+			+ d.getMinutes().toString().padStart(2, '0');
+
+		rowData = $('<td></td>').text(dataFormatada);
+		row.append(rowData);
+
+		d = new Date(dados[i].registro);
+		dataFormatada = d.getDate().toString().padStart(2, '0') + '/'
+			+ (d.getMonth() + 1).toString().padStart(2, '0') + '/'
+			+ d.getFullYear() + " "
+			+ d.getHours().toString().padStart(2, '0') + ":"
+			+ d.getMinutes().toString().padStart(2, '0');
+
+		rowData = $('<td></td>').text(dataFormatada);
+		row.append(rowData);
+
+		let textoPgto = "";
+		if (dados[i].forma == 1) {
+		    textoPgto = "Dinheiro";
+		}
+		if (dados[i].forma == 2) {
+		    textoPgto = "Débito";
+		}
+		if (dados[i].forma == 3) {
+		    textoPgto = "Crédito";
+		}
+		if (dados[i].forma == 4) {
+		    textoPgto = "Crédito/Comp.";
+		}
+
+		rowData = $('<td></td>').text(textoPgto);
+		row.append(rowData);
+
+		link = $("<a />", {
+		    href : "/cesta/" + dados[i].cesta,
+		    text : dados[i].cesta
+		});
+		rowData = $('<td></td>').append(link);
+		row.append(rowData);
+
+		rowData = $('<td></td>').text("R$ " + dados[i].valorBruto);
+		row.append(rowData);
+		rowData = $('<td></td>').text(dados[i].taxa);
+		row.append(rowData);
+		rowData = $('<td></td>').text("R$ " + dados[i].valor);
+		row.append(rowData);
+
+		table.append(row);
+	    }
+	    $(div_name).append(table);
+	}
+	function criar_tabela_extrato(dados, div_name) {
+	    $(div_name).html("");
+	    var table = $('<table></table>').addClass("table");
+	    var row = $('<th><td>Compensação</td><td>Transação</td><td>Forma</td><td>Bruto</td><td>Liquido</td></th>');
+	    table.append(row);
+	    for (var i = 0; i < dados.length; i++) {
+		row = $('<tr></tr>');
+
+		rowData = $('<td></td>').text(dados[i].codigo_Venda);
+		row.append(rowData);
+
+		let d = new Date(dados[i].data_Compensacao);
+		let dataFormatada = d.getDate().toString().padStart(2, '0')
+			+ '/' + (d.getMonth() + 1).toString().padStart(2, '0')
+			+ '/' + d.getFullYear() + " "
+			+ d.getHours().toString().padStart(2, '0') + ":"
+			+ d.getMinutes().toString().padStart(2, '0');
+
+		rowData = $('<td></td>').text(dataFormatada);
+		row.append(rowData);
+
+		d = new Date(dados[i].data_Transacao);
+		dataFormatada = d.getDate().toString().padStart(2, '0') + '/'
+			+ (d.getMonth() + 1).toString().padStart(2, '0') + '/'
+			+ d.getFullYear() + " "
+			+ d.getHours().toString().padStart(2, '0') + ":"
+			+ d.getMinutes().toString().padStart(2, '0');
+
+		rowData = $('<td></td>').text(dataFormatada);
+		row.append(rowData);
+
+		let textoPgto = "";
+		if (dados[i].tipo_Pagamento == 'Cart�o de D�bito') {
+		    textoPgto = "Débito";
+		} else {
+		    textoPgto = "Crédito";
+		}
+		rowData = $('<td></td>').text(textoPgto);
+		row.append(rowData);
+
+		rowData = $('<td></td>').text("R$ " + dados[i].valor_Bruto);
+		row.append(rowData);
+		rowData = $('<td></td>').text("R$ " + dados[i].valor_Liquido);
+		row.append(rowData);
+
+		table.append(row);
+	    }
+	    $(div_name).append(table);
+	}
+
+	function criar_tabela(dados, name_div) {
+	    $(name_div).html("");
+	    var table = $('<table></table>').addClass("m-5 table-sm");
+	    for (var i = 0; i < dados.length; i++) {
+		row = $('<tr></tr>');
+		rowData = $('<td></td>').text(dados[i]);
+		row.append(rowData);
+		table.append(row);
+	    }
+	    $(name_div).append(table);
+	}
+
+	function dialogo_loading() {
+	    let conteudo = '<div class="d-flex align-items-center"><strong class="text-warning">Aguarde...</strong><div class="spinner-border  text-warning ml-auto" role="status" aria-hidden="true"></div></div>';
+	    let texto = '<div class="modal" id="dialogo" data-backdrop="static"><div class="modal-dialog modal-sm"><div class="modal-content">';
+	    texto = texto + '<div class="modal-body">' + conteudo + '</div>';
+	    texto = texto + '</div></div></div>';
+	    $("body").append(texto);
+	    $("#dialogo").modal("show");
+	}
+    </script>
+
+</body>
+</html>

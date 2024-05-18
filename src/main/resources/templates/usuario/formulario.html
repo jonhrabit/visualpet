@@ -1,0 +1,157 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
+	integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt"
+	crossorigin="anonymous" />
+
+<title>Usuário</title>
+<link rel="icon" href="/images/icon.png" />
+</head>
+<body onload="completar()">
+	<div th:replace="fragmentos/menu"></div>
+
+	<div class="container" style="padding: 20">
+		<form method="POST" th:object="${usuario}"
+			th:action="@{/usuario/salvar}">
+
+			<input type="hidden" id="senha" th:field="*{senha}" /> <input
+				type="hidden" id="id" th:field="*{id}" /> <input type="hidden"
+				id="enabled" th:field="*{enabled}" />
+			<div class="row">
+				<div class="col-md-8">
+					<div class="form-group">
+						<label for="nome">Nome</label> <input type="text" id="nome"
+							class="form-control" th:field="*{nome}" autofocus="autofocus" />
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label for="login">Login</label> <input type="text" id="login"
+							class="form-control" th:field="*{login}"
+							onblur="checarlogin('#login')" />
+						<div id="result"></div>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="form-group">
+						<label for="setor">Estabelecimento</label> <input id="setor"
+							class="form-control" th:field="*{setor}" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group" hidden>
+				<label for="obs">Observação</label>
+				<textarea id="obs" th:field="*{obs}" class="form-control"></textarea>
+			</div>
+			<div class="form-group" id="regrasUsuario" name="regrasUsuario">
+			</div>
+
+			<div class="form-group">
+				<div
+					th:each="regra,i : ${T(px.main.seguranca.modelos.Regras).values()}">
+					<div class="form-check" id="selecao">
+
+						<input class="form-check-input" type="checkbox"
+							th:value="${regra}" onchange="seila(this)" th:id="__${regra}__">
+						<label class="form-check-label" for="defaultCheck1"><span
+							th:text=${regra.descricao}></span></label>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="p-2 btn btn-primary" id="salvar">Salvar</button>
+				</div>
+
+			</div>
+		</form>
+
+	</div>
+
+	<div class="modal modal-warning fade" id="modal-mensagem">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Mensagem</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p th:text="${mensagem}" id="msg"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js"
+		integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P"
+		crossorigin="anonymous"></script>
+
+	<script th:inline="javascript">
+	
+	var isInlineEdit = [[${mensagem} != null ? true:false]];
+	 
+	  if(isInlineEdit){
+		  $(window).on('load', function() {
+				$('#modal-mensagem').modal('show');
+			});
+	      }
+	  function seila(campo){
+		  if(campo.checked==true){
+			  var regrasCliente= document.getElementById("regrasUsuario");
+			  var input = document.createElement("input");
+	          input.type = "hidden";
+	          input.name = "regras["+ regrasCliente.childElementCount +"].regra";
+	          input.id="input_"+campo.value;
+	          input.value=campo.value;
+	          regrasCliente.appendChild(input);
+		  }else{
+			  var input=document.getElementById("input_"+campo.value);
+			  input.parentNode.removeChild(input);
+ 			  var regrasUsuario= document.getElementById("regrasUsuario").childNodes;
+			  var contador=0;
+			  regrasUsuario.forEach(
+					  function(currentValue, currentIndex, listObj) {
+						  if(currentValue.name!=null){
+							  currentValue.name="regras["+ contador +"].regra";
+						  	contador++;
+						  }
+					  }
+			  )
+		  }
+		  
+	  }
+	  function completar(){
+		  var checkBox;
+			/*[# th:each="r : ${usuario.regras}"]*/
+			var campo=document.getElementById([[${r.regra}]])
+			campo.checked=true;
+			var regrasCliente= document.getElementById("regrasUsuario");
+			  var input = document.createElement("input");
+	          input.type = "hidden";
+	          input.name = "regras["+ regrasCliente.childElementCount +"].regra";
+	          input.id="input_"+campo.value;
+	          input.value=campo.value;
+	          regrasCliente.appendChild(input); 
+			/*[/]*/
+	  }
+	  
+	</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
+	integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt"
+	crossorigin="anonymous" />
+
+<title>Relatório Caixa</title>
+<link rel="icon" href="/images/icon.png" />
+
+</head>
+<body>
+	<div th:replace="fragmentos/menu"></div>
+
+	<div class="container" style="padding: 20">
+		<div class="row">
+			<div class="col-md-2">
+				<img alt="upload" src="/images/icon.png" height="100" width="100" />
+			</div>
+			<div class="col-md-6">
+				<h5>Extrato</h5>
+				<p>
+					<span th:if="${view.tipo==1}"> Créditos </span> <span
+						th:if="${view.tipo==0}"> Débitos </span> <span
+						th:if="${view.tipo==2}"> Movimento </span> de <span
+						th:text="${#dates.format(view.dataInicial, 'dd/MM/yyyy')}"></span>
+					até <span th:text="${#dates.format(view.dataFinal, 'dd/MM/yyyy')}"></span>
+				</p>
+
+				<p th:if="${view.forma!=''}">
+					Forma de Pagamento:
+						<span th:if="${view.forma==0}">Todos</span>
+						<span th:if="${view.forma==1}">Dinheiro</span> <span
+						th:if="${view.forma==2}">Débito</span> <span
+						th:if="${view.forma==3}">Crédito</span> <span
+						th:if="${view.forma==4}">Crédito/Comp.</span>
+
+
+				</p>
+				<p th:if="${view.pagadores!=''}">
+					Filtro por texto: <span th:text="${view.pagadores}"></span>
+				</p>
+
+
+			</div>
+			<div class="col-md-4">
+				<p>
+					Entradas : R$ <span th:text="${view.totalCredito}"></span>
+				</p>
+				<p class="text-danger">
+					Saidas : R$ <span th:text="${view.totalDebito}"></span>
+				</p>
+				<h4>
+					Total : R$ <span th:text="${view.total}"></span>
+				</h4>
+
+
+			</div>
+		</div>
+
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Data</th>
+					<th>Forma pagamento</th>
+					<th>Entradas</th>
+					<th>Saídas</th>
+					<th>ObS</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item,i:${view.resultado}">
+					<td th:text="${i.count}"></td>
+					<td th:text="${#dates.format(item.data, 'dd/MM/yyyy HH:mm')}"></td>
+					<td><span th:if="${item.forma==1}">Dinheiro</span> <span
+						th:if="${item.forma==2}">Débito</span>  <span
+						th:if="${view.forma==3}">Crédito</span><span
+						th:if="${item.forma==4}">Crédito/Comp.</span></td>
+					<td><span th:if="${item.tipo==1}?|R$ ${item.valor}|"
+						th:text="|R$ ${item.valor}|"></span></td>
+					<td><span th:if="${item.tipo==0}?|R$ ${item.valor}|"
+						th:text="|R$ ${item.valor}|"></span></td>
+
+					<td><span th:text="${item.texto}"></span></td>
+				</tr>
+
+			</tbody>
+		</table>
+
+	</div>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+		crossorigin="anonymous"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js"
+		integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P"
+		crossorigin="anonymous"></script>
+
+</body>
+</html>

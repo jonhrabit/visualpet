@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<!-- ... -->
+
+<link th:replace="fragmentos/css"></link>
+
+<title>Pacote</title>
+<link rel="icon" href="/images/icon.png" />
+
+</head>
+
+<body>
+	<div th:replace="fragmentos/menu"></div>
+	<div class="container">
+
+		<h3 class="mt-3">Pacote</h3>
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="col-md-12">
+					<h3 for="cliente">
+						Cliente: <span th:text="${pacote.cliente.nome}"></span>
+					</h3>
+					<h3 for="valor">
+						Valor: <span th:text="|R$ ${pacote.valor}|"></span>
+					</h3>
+				</div>
+
+				<div class="col-md-12">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Data</th>
+								<th>Pet</th>
+								<th>Serviço</th>
+								<th>Situação</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="item:${pacote.atendimentos}">
+
+								<td><a
+									th:text="${#dates.format(item.agenda, 'dd/MM/yyyy HH:mm')}"
+									th:href="@{/atendimento/__${item.id}__}"></a></td>
+								<td><a href="/pet/__${item.pet.id}__"
+									th:href="@{/pet/__${item.pet.id}__}"
+									th:text="${item.pet.nome}"></a></td>
+								<td th:text="${item.servico.texto}"></td>
+								<td th:text="${item.situacao}"></td>
+							</tr>
+						</tbody>
+					</table>
+
+
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<h3 for="descricao">Descrição</h3>
+				<span th:text="${pacote.descricao}"></span>
+			</div>
+		</div>
+
+	</div>
+	<div th:replace="fragmentos/js"></div>
+</body>
+</html>

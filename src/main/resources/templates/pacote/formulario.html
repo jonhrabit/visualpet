@@ -1,0 +1,228 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<!-- ... -->
+
+<link th:replace="fragmentos/css"></link>
+
+<title>Pacote</title>
+<link rel="icon" href="/images/icon.png" />
+
+</head>
+
+<body>
+	<div th:replace="fragmentos/menu"></div>
+	<div class="container">
+
+		<h3>Pacote</h3>
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label for="cliente">Cliente</label> <select id="cliente"
+							class="form-control">
+							<option th:each="cliente : ${clientes}" th:value="${cliente.id}"
+								th:text="${cliente.nome}"></option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="tamanho">Tamanho</label> <input type="number"
+								id="tamanho" class="form-control" placeholder="Tamanho"
+								onchange="gerar()" />
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="valor">Valor</label> <input type="text" id="valor"
+								class="form-control" placeholder="Valor" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<label for="descricao">Descrição</label>
+				<textarea rows="6" cols="" id="descricao" class="form-control"></textarea>
+			</div>
+		</div>
+		<div>
+			<a href="#" class="btn btn-primary" onclick="gerar()">Próximo</a>
+		</div>
+		<div>
+			<div id="atendimentos" class="m-3"></div>
+
+		</div>
+
+	</div>
+	<div th:replace="fragmentos/js"></div>
+
+	<script type="text/javascript">
+	var pets = [];
+	function sel_pet(id) {
+	    for (let i = 0; i < pets.length; i++) {
+		if (pets[i].id == id) {
+		    return pets[i];
+		}
+	    }
+	}
+
+	function gerar() {
+	    $("#atendimentos").html("");
+
+	    if (($("#tamanho").val() != "") && ($("#valor").val() != "")) {
+
+		$.ajax({
+		    url : "/pet/tutor/" + $("#cliente").val(),
+		    async : false,
+		    success : function(result) {
+			pets = result;
+			console.log(pets);
+		    }
+		});
+		var servicos = [];
+		$.ajax({
+		    url : "/atendimento/servicos",
+		    async : false,
+		    success : function(result) {
+			servicos = result;
+		    }
+		});
+		for (let i = 0; i < $("#tamanho").val(); i++) {
+		    var formulario = "<div class='row p-2'>";
+		    if (i == 0) {
+			formulario = formulario
+				+ "<div class='col-lg-2'></div><div class='col-lg-4'><input type='datetime-local' class='form-control' id='data"
+				+ i + "' onchange='ddata()'/></div>";
+		    } else {
+			formulario = formulario
+				+ "<div class='col-lg-2'><input type='checkbox' class='form-check-input' id='semanal"
+			+ i + "' checked/><label class='form-check-label'>Semanal</label></div>";
+
+			formulario = formulario
+				+ "<div class='col-lg-4'><input type='datetime-local' class='form-control' id='data"+i+"' /></div>";
+		    }
+		    formulario = formulario
+			    + "<div class='col-lg-3'><select class='form-control' id='servico"+i+"'>";
+		    for (let z = 0; z < servicos.length; z++) {
+			formulario = formulario
+				+ "<option value='"+ servicos[z].id +"'>"
+				+ servicos[z].texto + "</option>";
+		    }
+		    formulario = formulario + "</select></div>";
+
+		    formulario = formulario
+			    + "<div class='col-lg-3'><select class='form-control' id='pet"+i+"'>";
+		    for (let x = 0; x < pets.length; x++) {
+			formulario = formulario
+				+ "<option value='"+ pets[x].id +"'>"
+				+ pets[x].nome + "</option>";
+		    }
+		    formulario = formulario + "</select></div>";
+		    formulario = formulario + "</div>";
+		    $("#atendimentos").append(formulario);
+		}
+		var f = "<div><a class='btn btn-primary' href='#' onclick='gravar()'>Gravar</a></div>";
+		$("#atendimentos").append(f);
+	    } else {
+		alert("Informe o valor e tamanho do pacote.");
+	    }
+	}
+	function ddata() {
+	    var d = moment($("#data0").val());
+	    for (let i = 1; i < $("#tamanho").val(); i++) {
+		if ($("#semanal" + i).is(":checked")) {
+		    $("#data" + i)
+			    .val(d.add(7, 'd').format("YYYY-MM-DDTHH:mm"));
+		} else {
+
+		    $("#data" + i).val(d.format("YYYY-MM-DDTHH:mm"));
+		}
+	    }
+	}
+	function post_pacote() {
+	    let pacote = {
+		cliente : {
+		    id : $("#cliente").val()
+		},
+		tamanho : $("#tamanho").val(),
+		valor : $("#valor").val(),
+		descricao : $("#descricao").val()
+	    }
+	    $.ajax({
+		url : "/pacote",
+		async : false,
+		headers : {
+		    'X-CSRF-Token' : $("meta[name='_csrf']").attr("content")
+		},
+		data : JSON.stringify(pacote),
+		type : "POST",
+		contentType : 'application/json',
+		success : function(result) {
+		    console.log("pacote salvo com sucesso.");
+		    console.log(result);
+		    pacote = result;
+		}
+	    });
+	    return pacote;
+	}
+
+	function gravar() {
+	    let pac = post_pacote();
+	    console.log(pac);
+	    let valido = true;
+	    let resultado = [];
+	    for (let i = 0; i < $("#tamanho").val(); i++) {
+		if ($("#data" + i).val() == "") {
+		    valido = false;
+		}
+	    }
+	    if (valido != true) {
+		alert("Informe as datas dos serviços.");
+	    } else {
+		let a;
+		for (let i = 0; i < $("#tamanho").val(); i++) {
+		    a = {
+			agenda : $("#data" + i).val(),
+			pet : {
+			    id : $("#pet" + i).val()
+			},
+			servico : {
+			    "id" : $("#servico" + i).val()
+			},
+			pacote : pac
+		    }
+		    $.ajax({
+			url : "/atendimento",
+			headers : {
+			    'X-CSRF-Token' : $("meta[name='_csrf']").attr(
+				    "content")
+			},
+			data : JSON.stringify(a),
+			type : "POST",
+			contentType : 'application/json',
+			error : function(result) {
+			    console.log(result);
+			    alert(result);
+			}
+		    });
+		}
+		alert("Registros gravados com sucesso.");
+		$.ajax({
+		    url : "/cesta/addpacote/" + pac.id,
+		    success : function(result) {
+			return result;
+		    }
+		});
+		location.assign("/cesta");
+	    }
+	}
+    </script>
+
+</body>
+</html>

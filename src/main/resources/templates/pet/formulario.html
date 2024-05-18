@@ -1,0 +1,520 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+<link th:replace="fragmentos/css"></link>
+<title>Pet</title>
+<link rel="icon" href="/images/icon.png"></link>
+</head>
+
+<body>
+	<div th:replace="fragmentos/menu"></div>
+
+	<ul class="nav nav-tabs">
+		<li class="nav-item"><a class="nav-link active" href="#home"
+			data-toggle="tab">Cadastro</a></li>
+		<li class="nav-item" sec:authorize="hasRole('ROLE_PRODUTO')"
+			th:if="${pet.novo==false}"><a class="nav-link" href="#menu1"
+			data-toggle="tab">Vacinas</a></li>
+		<li class="nav-item" th:if="${pet.novo==false}"><a
+			class="nav-link" data-toggle="tab" href="#menu2">Histórico</a></li>
+		<li class="nav-item" th:if="${pet.novo==false}"><a
+			class="nav-link" data-toggle="tab" href="#menu3">Fotos</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active">
+
+			<div class="row">
+
+				<div class="col-md-10">
+					<form th:object="${pet}" th:action="@{/pet/salvar}" method="POST"
+						class="p-2" id="form_pet">
+						<input name="id" id="id" th:field="*{id}" type="hidden" /> <input
+							id="crsf" type="hidden" th:name="${_csrf.parameterName}"
+							th:value="${_csrf.token}" />
+						<div class="row">
+
+							<div class="col-md-9">
+								<div class="form-group">
+									<label for="nome" style="font-color: white">Nome</label> <input
+										class="form-control" type="text" th:field="*{nome}" id="nome" />
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="especie">Especie</label> <select
+										class="form-control" th:field="*{especie}" id="especie">
+										<option value="Cão">Cão</option>
+										<option value="Gato">Gato</option>
+										<option value="Outros">Outros</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-2">
+								<div class="form-group">
+									<label for="tipo">Sexo</label><select class="form-control"
+										th:field="*{sexo}" id="sexo">
+										<option value="1">Macho</option>
+										<option value="0">Femea</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="tipo">Raça</label> <input class="form-control"
+										type="text" th:field="*{raca}" id="raca" />
+								</div>
+							</div>
+
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="tipo">Pelagem</label> <input class="form-control"
+										type="text" th:field="*{pelagem}" id="pelagem" />
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="data">Data de Nascimento</label> <input type="date"
+										class="form-control form-control" id="data"
+										th:field="*{nascimento}" />
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="tipo">Observações</label> <input
+										class="form-control" type="text" th:field="*{obs}" id="obs" />
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="float-right">
+									<a class="ml-5" th:href="@{/cliente}">Cadastrar novo
+										tutor...</a><a class="ml-5 btn btn-secondary" th:if="${pet.id!=0}"
+										th:href="@{/cliente/__${pet.tutor.id}__}">Acessar Tutor</a>
+								</div>
+
+								<div class="form-group">
+									<label for="tutor">Tutor </label> <select id="tutor"
+										class="form-control" th:field="*{tutor}">
+										<option th:each="cliente : ${listaclientes}"
+											th:value="${cliente.id}" th:text="${cliente.nome}"></option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</form>
+
+				</div>
+				<div class="col-md-2">
+					<div class="container">
+						<button type="submit" class="m-1 col-md-12 btn btn-primary"
+							id="salvar" form="form_pet">Salvar</button>
+						<a class="m-1 col-md-12 btn btn-danger" th:name="${pet.nome}"
+							href="#" th:if="${pet.novo==false}"
+							th:onclick="|del(${pet.id},this.name)|">Excluir</a> <a
+							th:href="@{/prontuario/pet/__${pet.id}__}"
+							class="m-1 col-md-12 btn btn-primary" th:if="${pet.novo==false}"
+							sec:authorize="hasRole('ROLE_VETERINARIA')">Novo Prontuário</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="menu1" name="menu1" class="tab-pane fade">
+			<div>
+				<table class="table" id="tabela">
+					<thead>
+						<tr>
+							<th>Data</th>
+							<th>Vacina</th>
+							<th>Vigência</th>
+						</tr>
+
+						<tr>
+							<th><input name="petId" id="petId" th:value="${pet.id}"
+								type="hidden" /> <input type="date" class="form-control"
+								id="dia" /></th>
+							<th><input type="text" class="form-control" id="vacina"
+								placeholder="Vacina" /></th>
+							<th><input type="date" class="form-control" id="vigencia" /></th>
+							<th><a class="btn btn-primary" onclick="lancar_vacina()"
+								href='#'>Adicionar</a></th>
+						</tr>
+
+
+					</thead>
+					<tbody id="corpo">
+
+						<tr th:each="vacina:${pet.vacinas}">
+							<td th:text="${#dates.format(vacina.aplicacao, 'dd/MM/yyyy')}"></td>
+							<td th:text="${vacina.nome}"></td>
+							<td th:text="${#dates.format(vacina.vigencia, 'dd/MM/yyyy')}"></td>
+							<td th:if="${vacina.renovada}">Renovada</td>
+							<td th:if="${!vacina.renovada}" th:id="v__${vacina.id}__"><a
+								href="#"
+								th:onclick="|renovar_dialogo(${vacina.id},'__${vacina.nome}__')|"
+								class="btn btn-success">Renovar</a></td>
+							<td><a class="btn btn-danger" href="#"
+								th:onclick="|delVacina_dialogo(${vacina.id},'__${vacina.nome}__')|">Excluir</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div id="menu2" class="tab-pane fade">
+			<div class="col-md-12" th:if="${pet.id!=0}">
+				<div class="float-right">
+					<button type="button" class="btn btn-primary" data-toggle="modal"
+						data-target="#modalform">Anotar...</button>
+				</div>
+
+			</div>
+
+			<table class="table" id="tableInfos"></table>
+		</div>
+		<div id="menu3" class="tab-pane fade">
+			<div class="container fluid">
+				<div col-12>
+					<div class="row">
+						<div th:each="item,i:${fotos}">
+							<img th:src="@{/fotos/__${pet.id}__/__${item}__}"
+								th:alt="${item}" class="img-thumbnail" style="max-height: 240px">
+						</div>
+					</div>
+
+
+					<form th:action="@{/pet/upfoto}" method="POST" id="foto"
+						enctype="multipart/form-data">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="nome">Upload:</label> <input class="form-control"
+										type="file" name="file" />
+								</div>
+							</div>
+							<div class="col-md-4">
+								<button type="submit" class="p-2 btn btn-primary" form="foto">Enviar</button>
+							</div>
+						</div>
+				</div>
+				<input id="crsf" type="hidden" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" /> <input name="id" id="id"
+					th:value="${pet.id}" type="hidden" />
+
+				</form>
+				<div class="col-6"></div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="modal modal-warning fade" id="modalform"
+		th:if="${pet.id!=0}">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">
+						Anotação - <span th:text="${pet.nome}"></span>
+					</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form th:object="${anotacao}" th:action="@{/pet/anotacao}"
+						id="form-anotacao" method="POST">
+						<input type="hidden" th:name="${_csrf.parameterName}"
+							th:value="${_csrf.token}" /> <input th:value="${pet.id}"
+							type="hidden" id="id" name="id" />
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="tipo">Tipo</label> <select class="form-control"
+									th:field="*{tipo}">
+									<option value="Anotação">Anotação</option>
+									<option value="Peso">Peso</option>
+									<option value="Outros">Outros</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="nome">Texto</label> <input class="form-control"
+									type="text" th:field="*{texto}" id="nome" />
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" id="salvar"
+						form="form-anotacao">Salvar</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal modal-warning fade" id="modal-mensagem">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Mensagem</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p th:text="${mensagem}" id="msg"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" id="tutorModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body" id="modalInformcao"></div>
+			</div>
+		</div>
+	</div>
+
+
+	<div th:replace="fragmentos/js"></div>
+
+
+	<script th:inline="javascript">
+		var infos = [[${pet.informacoes}]];
+		console.log(infos);
+		var tableInfo =  $("#tableInfos")
+		.DataTable(
+			{
+			    data : infos,
+			    order: [ 0, 'desc' ],
+			    language : {
+				url : "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+			    },
+			    columns : [
+				{
+				    data : "data",
+				    type: "date-eu",
+				    title : "Data",
+				    render: function(data, type, row){
+			                if(type === "sort" || type === "type"){
+			                    return data;
+			                }
+			                return moment(data).format("DD/MM/YYYY HH:mm");
+			            }
+				},{
+					data : "tipo",
+					title : "Tipo"
+				},{
+					data : "texto",
+					title : "Informação",
+					render: function ( data, type, row ) {
+					    if(row.tipo=="Atendimento"){
+							return "<a href='/atendimento/"+row.idLink+"'>"+data+"</a>";
+					    }
+					    
+				    return data;
+				}
+				},{
+					data : "valor",
+					title : "",
+					render : function ( data, type, row ) {
+					    if(data==0){
+							return "";
+					    }
+					    return "R$ "+data;
+					}
+
+				    } ]
+			});
+	
+	
+	
+		var isInlineEdit = [[${ mensagem } != null ? true : false]];
+		setData("#vigencia",1);
+		setData("#dia",0);
+		function setData(div_name,ano){
+			let d = new Date();
+			let dataFormatada = (d.getFullYear()+ano) + "-" + (d.getMonth() + 1).toString().padStart(2, '0') + '-' + d.getDate().toString().padStart(2, '0');
+			$(div_name).val(dataFormatada);
+		}
+		
+		function del(id, nome) {
+			var texto = "Tem certeza da exclusão de " + nome + "?";
+			texto = texto + "<p><p>";
+			texto=texto+'<div class="row justify-content-between">';
+			texto=texto+'<div class="col-5">';
+			texto = texto + "<a class='p-3 btn btn-primary'  href='#'  onclick='$(\"#tutorModal\").modal(\"hide\")'>Não</a>";
+			texto=texto+'</div><div class="col-2">';
+			texto = texto + "<a class='p-3 btn btn-danger' href='/pet/delete/" + id + "'>Sim</a>";
+			texto=texto+'</div></div>';
+
+			$("#modalInformcao").html(texto);
+			$("#tutorModal").modal("show");
+		}
+		function delVacina_dialogo(id,nome) {			
+			var texto = "Excluir a vacina " + nome + "?";
+			texto = texto + "<p><p>";
+			texto=texto+'<div class="row justify-content-between">';
+			texto=texto+'<div class="col-5">';
+			texto = texto + "<a class='p-3 btn btn-primary' href='#' onclick='$(\"#tutorModal\").modal(\"hide\")'>Não</a>";
+			texto=texto+'</div><div class="col-2">';
+			texto = texto + "<a class='p-3 btn btn-danger' onclick='delVacina("+id+")' href='#'>Sim</a>";
+			texto=texto+'</div></div>';
+
+			$("#modalInformcao").html(texto);
+			$("#tutorModal").modal("show");
+		}
+		function delVacina(id){
+			$("#tutorModal").modal("hide");
+			$.ajax({
+				url: "/pet/vacina/excluir/"+$("#id").val()+"/"+id,
+				success: function (dados) {
+                	atualizar(dados);
+				}
+			});
+		}
+		
+		
+		
+		if (isInlineEdit) {
+			$(window).on('load', function () {
+				$('#modal-mensagem').modal('show');
+			});
+		}
+		
+		function renovar_dialogo(id, nome){
+			var texto = "Anotar como renovada a vacina " + nome + "?";
+			texto = texto + "<p><p>";
+			texto=texto+'<div class="row justify-content-between">';
+			texto=texto+'<div class="col-2">';
+			texto = texto + "<a class='p-3 btn btn-primary' href='#'  onclick='$(\"#tutorModal\").modal(\"hide\")'>Não</a>";
+			texto=texto+'</div><div class="col-2">';
+			texto = texto + "<a class='p-3 btn btn-success'  href='#' onclick='renovar(" + id + ")'>Sim</a>";
+			texto=texto+'</div></div>';
+			$("#modalInformcao").html(texto);
+			$("#tutorModal").modal("show");
+		}
+		
+		function renovar(id){
+			$("#tutorModal").modal("hide");
+			$.ajax({
+				url: "/pet/vacina/renovar",
+				data: {
+					id: id,
+					petId: $("#id").val()
+				},
+				success: function (resposta) {
+					if (resposta) {
+						$("#msg").text("Vacina anotada como renovada.");
+						$("#modal-mensagem").modal('show');
+						$("#v"+id).html("Renovada");
+					}else{
+						$("#msg").text("Não foi possivel renovar a vacina.");
+						$("#modal-mensagem").modal('show');
+					}
+				}
+			});
+		}		
+		function saveMedia(nome,valor){
+			var csrfHeader =nome;
+			var csrfToken  =valor;
+			console.log(csrfToken);
+			console.log(csrfHeader);
+          	$.ajax({
+                url : '/pet/uploadfoto?_csrf='+valor,
+                data : {
+                	file:  $('input[type=file]')[0].files[0],
+                	id: $("#id").val()
+                },
+                processData : false,
+                contentType : false,
+                type : 'POST',
+                success : function(data) {
+                    alert(data);
+                },
+                error : function(err) {
+                    alert(err);
+                }
+            }); 
+        }
+		function lancar_vacina(){
+          	$.ajax({
+                url : '/pet/vacina/salvar',
+                data : {
+                	dia: $("#dia").val(),
+                	vacina:$("#vacina").val(),
+                	vigencia:$("#vigencia").val(),
+                	petId:$("#petId").val()
+                },
+                success : function(dados) {
+                	atualizar(dados);
+                },
+                error : function(err) {
+                    console.log(err);
+                    alert("Erro durante o registro da vacina.");
+                }
+            }); 
+        }
+		function atualizar(dados){
+			$("#corpo").html("");
+        	var row;
+			for (var i = 0; i < dados.length; i++) {
+    			row = $('<tr></tr>');
+    				
+    			let d = new Date(dados[i].aplicacao);
+    			let dataFormatada = d.getDate().toString().padStart(2, '0') + '/'
+    				+ (d.getMonth() + 1).toString().padStart(2, '0') + '/'
+    				+ d.getFullYear();
+        		rowData = $('<td></td>').text(dataFormatada);
+        		row.append(rowData);
+
+        		rowData = $('<td></td>').text(dados[i].nome);
+        		row.append(rowData);
+        		
+    			d = new Date(dados[i].vigencia);
+    			dataFormatada = d.getDate().toString().padStart(2, '0') + '/'
+    				+ (d.getMonth() + 1).toString().padStart(2, '0') + '/'
+    				+ d.getFullYear();
+        		rowData = $('<td></td>').text(dataFormatada);
+        		row.append(rowData);
+        		
+        		if(dados[i].renovada){
+        			rowData = $('<td></td>').text("Renovada");
+	        		row.append(rowData);
+        		}else{
+        			let link = $("<a />", {
+        				href : "#",
+        				text : "Renovar",
+        				onclick:"renovar_dialogo(this)"
+        			}).addClass("btn btn-success");
+        			rowData = $('<td></td>').append(link);
+        			row.append(rowData);
+        		}
+        		let link = $("<a />", {
+    				href : "#",
+    				text : "Excluir",
+    				onclick:"delVacina_dialogo("+dados[i].id+",'"+dados[i].nome+"')"
+    			}).addClass("btn btn-danger");
+    			rowData = $('<td></td>').append(link);
+    			row.append(rowData);
+        		$("#corpo").append(row);
+			}
+			
+			
+			
+		}
+
+	</script>
+</body>
+</html>

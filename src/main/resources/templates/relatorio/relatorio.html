@@ -1,0 +1,133 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
+	integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt"
+	crossorigin="anonymous" />
+
+<title>Cesta</title>
+<link rel="icon" href="/images/icon.png" />
+</head>
+<body>
+
+	<div th:replace="fragmentos/menu"></div>
+	<div class="container" style="padding: 20">
+		<br />
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row border">
+					<div class="col-md-6">
+						<h5>Visual Pet Estética Canina</h5>
+						<h6>CNPJ 35.234.983/0001-05</h6>
+						<h6>Av. Protásio Alves nº.7195 - Alto Petropólis - Porto
+							Alegre/RS</h6>
+						<h6>Telefone: (51) 3334 0703</h6>
+					</div>
+					<div class="col-md-6">
+						<h6>Condulta do mês de</h6>
+						<div class="row">
+							<div class="col-md-4">
+								<select id="mes" class="form-control">
+									<option value="1">Janeiro</option>
+									<option value="2">Fevereiro</option>
+									<option value="3">Março</option>
+									<option value="4">Abril</option>
+									<option value="5">Maio</option>
+									<option value="6" selected="selected">Junho</option>
+									<option value="7">Julho</option>
+									<option value="8">Agosto</option>
+									<option value="9">Setembro</option>
+									<option value="10">Outubro</option>
+									<option value="11">Novembro</option>
+									<option value="12">Dezembro</option>
+								</select>
+							</div>
+							<div class="col-md-4">
+								<input type="text" id="ano" class="form-control"/>
+							</div>
+							<div class="col-md-4">
+								<a class="btn btn-primary" onclick="atualizar()">Pesquisar</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				</br>
+				<div class="row border">
+					<div class="col-md-12">
+						<table class="table">
+							<tr>
+								<td></td>
+								<td>Dinheiro</td>
+								<td>Débito</td>
+								<td>Crédito</td>
+								<td>Crédito/Comp</td>
+								<td>Totais(Sem dinheiro)</td>
+								<td>Totais</td>
+							</tr>
+							<tr>
+								<td>Serviços</td>
+								<td id="sd"></td>
+								<td id="sde"></td>
+								<td id="sc"></td>
+								<td id="scc"></td>
+								<td id="total_servico_sd"></td>
+								<td id="total_servico"></td>
+							</tr>
+							<tr>
+								<td>Produtos</td>
+								<td id="pd"></td>
+								<td id="pde"></td>
+								<td id="pc"></td>
+								<td id="pcc"></td>
+								<td id="total_produto_sd"></td>
+								<td id="total_produto"></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td id="td" style="font-weight: bold"></td>
+								<td id="tde" style="font-weight: bold"></td>
+								<td id="tc" style="font-weight: bold"></td>
+								<td id="tcc" style="font-weight: bold"></td>
+								<td id="total_sem_dinheiro"  style="font-weight: bold"></td>
+								<td id="total_geral" style="font-weight: bold"></td>
+							</tr>
+						</table>
+
+
+					</div>
+				</div>
+
+
+
+				<br />
+				<h6>Itens</h6>
+				<div id="resultado"></div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row  justify-content-end">
+
+				<span
+					th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">01/01/2020</span>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="/js/relatorios/vendas-mes.js"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js"
+		integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P"
+		crossorigin="anonymous"></script>
+
+</body>
+</html>

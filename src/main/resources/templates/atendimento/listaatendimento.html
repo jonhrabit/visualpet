@@ -1,0 +1,190 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<link th:replace="fragmentos/css"></link>
+
+<style type="text/css">
+a {
+	color: black;
+}
+</style>
+
+<title>Atendimentos</title>
+<link rel="icon" href="/images/icon.png" />
+
+</head>
+
+<body>
+	<div th:replace="fragmentos/menu"></div>
+
+	<div class="modal modal-warning fade" id="modal-mensagem">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Mensagem</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p th:text="${mensagem}" id="msg"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<a class="btn btn-secondary" data-toggle="collapse"
+		href="#multiCollapseExample1" role="button" aria-expanded="false"
+		aria-controls="multiCollapseExample1">Cadastro Agenda</a>
+
+	<a class="btn" onclick="filtro()"><img
+		src="/images/Filter_icon-icons.com_52097.png" alt="filtro"></a>
+
+
+	<div class="modal" id="tutorFiltro">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="tipo">Tipo de Serviço:</label> <select
+								class="form-control form-control-lg"
+								onchange="modificado(this.value)">
+								<option th:value="99">Todos</option>
+								<option th:each="ser:${atendimentoView.servicoTipo}"
+									th:value="${ser.id}" th:text="${ser.descricao}"></option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col">
+		<div class="collapse multi-collapse" id="multiCollapseExample1">
+			<div class="card card-body">
+
+				<form th:action="@{/atendimento/salvarPratico}"
+					id="form_atendimento" th:object="${atendimentoView}" method="GET">
+					<div class="row">
+						<div class="col-md-3">
+							<input type="hidden" th:name="${_csrf.parameterName}"
+								th:value="${_csrf.token}" /> <input type="hidden"
+								th:field="*{idTutor}" id="idTutor" /> <input
+								type="datetime-local" class="form-control" th:field="*{data}" />
+						</div>
+						<div class="col-md-2">
+							<select name="servico" class="form-control" th:field="*{servico}">
+								<option th:each="servico: ${listaservico}"
+									th:value="${servico.id}" th:text="${servico.texto}"></option>
+							</select>
+						</div>
+
+						<div class="col-md-1">
+							<input type="text" class="form-control" name="pet" id="pet"
+								th:field="*{pet}" placeholder="Pet"
+								onfocusout="consultar_pet_pelo_nome()" />
+						</div>
+						<div class="col-md-2">
+							<input type="text" class="form-control" name="tutor" id="tutor"
+								th:field="*{tutor}" placeholder="Tutor"
+								onfocusout="consultar_tutor()" />
+						</div>
+						<div class="col-md-2">
+							<input type="text" class="form-control" name="celular"
+								id="celular" th:field="*{celular}" placeholder="Celular" />
+						</div>
+
+						<div class="col-md-1">
+							<input type="text" class="form-control" name="valor" id="valor"
+								th:field="*{valor}" placeholder="Valor" />
+						</div>
+						<div class="col-md-1">
+							<input class="btn btn-primary" type="submit" value="Cadastrar" />
+						</div>
+					</div>
+				</form>
+
+
+			</div>
+		</div>
+
+
+	</div>
+	<div id="tabela"></div>
+	<div class="modal" id="modal_tabela" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body"></div>
+			</div>
+		</div>
+	</div>
+
+
+	<div th:replace="fragmentos/js"></div>
+
+	<script src="/js/atendimento/listaatendimento.js"></script>
+
+
+	<script th:inline="javascript">
+		var isInlineEdit = [[${ mensagem } != null ? true : false]];
+
+		if (isInlineEdit) {
+			$(window).on('load', function () {
+				$('#modal-mensagem').modal('show');
+			});
+		}
+		atualizar(99);
+		function atualizar(tipo){
+			$.ajax({
+				url: "/atendimento/atualizar/"+tipo,
+				success: function (result) {
+					tabela(result,"#tabela");
+				}
+			});
+		}
+		function iniciar(id){
+			console.log("iniciar id: "+ id)
+			$.ajax({
+				url: "/atendimento/iniciar/"+id,
+				success: function (result) {
+					if(result==true){
+						console.log("iniciado o " + id);
+						$("#atendimento"+id).addClass('table-primary');
+					}
+				}
+			});
+		}
+		function cancelar(id){
+			$.ajax({
+				url: "/atendimento/cancelar/" + id,
+				success: function (result) {
+					$("#atendimento"+id).addClass('table-light');
+					$('#atendimento_status_'+id).html("<span class='text-danger'>Cancelado</span>");
+				}
+			});
+		}
+		function confiar(id){
+			$.ajax({
+				url: "/atendimento/confiar/" + id,
+				success: function (result) {
+					$("#atendimento"+id).addClass('table-warning');
+					$('#atendimento_status_'+id).html("<span class='text-warning'>Confiado</span>");
+				}
+			});
+		}
+		
+		
+		
+	</script>
+
+</body>
+</html>

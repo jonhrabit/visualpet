@@ -1,0 +1,62 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<!-- ... -->
+
+<link th:replace="fragmentos/css"></link>
+
+<title>Pacote</title>
+
+</head>
+
+<body>
+	<div th:replace="fragmentos/menu"></div>
+	<div class="container">
+		<h3>Teste</h3>
+		<label>Data: </label> <input type='datetime-local'
+			class='form-control' id='data' />
+			<div><a class="mt-4 btn btn-warning" onclick="post()">Gravar</a></div>
+
+	</div>
+	<div th:replace="fragmentos/js"></div>
+
+	<script type="text/javascript">
+	function post() {
+	    $.ajax({
+		url : "/atendimento/get/2986",
+		type : "GET",
+		dataType: 'json',
+		contentType : 'application/json',
+		success : function(result) {
+		    console.log(result);
+		}
+	    });
+	    
+	    let a = {
+		agenda : $("#data").val(),
+		pet : { id: 96},
+		servico : {"id":2,"texto":"Banho/TH","tipo":"ESTETICA"},
+		valor : 0
+	    };
+	    $.ajax({
+		url : "/atendimento/",
+		headers : {
+		    'X-CSRF-Token' : $("meta[name='_csrf']").attr("content")
+		},
+		data : JSON.stringify(a),
+		type : "POST",
+		dataType: 'json',
+		contentType : 'application/json',
+		success : function(result) {
+		    console.log(result);
+		}
+	    });
+	}
+    </script>
+
+</body>
+</html>

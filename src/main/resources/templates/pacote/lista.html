@@ -1,0 +1,106 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<!-- ... -->
+
+<link th:replace="fragmentos/css"></link>
+
+<title>Pacote</title>
+<link rel="icon" href="/images/icon.png" />
+
+</head>
+
+<body>
+	<div th:replace="fragmentos/menu"></div>
+	<div class="container">
+
+		<h3>Pacotes</h3>
+		<table id="tabela"></table>
+
+	</div>
+	<div th:replace="fragmentos/js"></div>
+
+	<script th:inline="javascript">
+	
+	var rol = [[${lista}]];
+	var tabela = $("#tabela")
+		.DataTable(
+			{
+			    data : rol,
+			    order: [ 0, "desc" ],
+			    language : {
+				url : "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+			    },
+			    columns : [
+				    {
+					data : "id",
+					title : "ID",
+					render : function(data, type, row) {
+					    return "<a href='/pacote/"+data+"'>"
+						    + data + "</a>";
+					}
+				    }, {
+					data : "cliente",
+					title : "Cliente",
+					render : function(data, type, row) {
+					    return "<a href='/cliente/"+data.id+"'>"
+						    + data.nome + "</a>";
+					}
+				    }, {
+					data : "descricao",
+					title : "Descrição"
+				    }, {
+					data : "valor",
+					title : "R$"
+				    }, {
+					data : "pago",
+					title : "Pago",
+					render : function(data, type, row) {
+					    if(data)
+						return "Sim";
+					    return "Não";
+					}
+				    },{
+					data : "id",
+					title : "",
+					render : function(data, type, row) {
+					    return "<a class='btn btn-warning' onclick='gravar(\""+
+						    data+"\")'><img src='/images/shopping_car.png' alt='Finalizar' width='16'/></a> "+
+						    "<a class='btn btn-danger' onclick='deletar(\""+
+							    data+"\")'><img src='/images/trash.png' alt='Deletar' width='16'/></a>";
+					}
+				    } ]
+			});
+	
+	function gravar(id){
+	    $.ajax({
+		url: "/cesta/addpacote/"+id,
+		success: function (result) {
+			return result;
+		}
+	});
+	    location.assign("/cesta");
+	}	
+	function deletar(id){
+	    if (confirm("Tem certeza da exclusão?")) {
+		 $.ajax({
+			url: "/pacote/"+id,
+			headers: {
+				'X-CSRF-Token': $("meta[name='_csrf']").attr("content")
+		        },
+			type: "DELETE",
+			success: function (result) {
+				alert(result);
+				location.reload();
+			}	   
+	});
+	}
+	}
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+<link th:replace="fragmentos/css"></link>
+
+<title>VisualPET - NFe</title>
+
+<link rel="icon" href="/images/icon.png"></link>
+
+</head>
+<body>
+
+	<div th:replace="fragmentos/menu"></div>
+
+	<div class="m-2">
+		<input id="crsf" type="hidden" th:name="${_csrf.parameterName}"
+			th:value="${_csrf.token}" ></input>
+			
+		<div class="btn btn-primary" onclick="form_lote()">Criar Lote</div>
+		<div class="btn btn-primary" onclick="processamento()">Processamento</div>
+		<div class="btn btn-primary" onclick="consultar_notas()">Consultar
+			Notas</div>
+	</div>
+	<div>
+		<div class="row">
+			<div id="resultado" class="m-4 col-6"></div>
+			<div id="resultado2" class="m-4 col-5"></div>
+		</div>
+	</div>
+
+	<div th:replace="fragmentos/js"></div>
+
+	<script src="/js/nfe/nfe.js"></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+
+<link th:replace="fragmentos/css"></link>
+<title>Caixa</title>
+<link rel="icon" href="/images/icon.png"></link>
+</head>
+<body>
+
+	<div th:replace="fragmentos/menu"></div>
+	<div class="container" style="padding: 20">
+		<div class="row">
+			<div class="col-md-12">
+				<h3>Caixa</h3>
+				<h5>Lançamento</h5>
+				<form th:object="${caixa}" th:action="@{/caixa/salvar}"
+					method="POST">
+					<input name="id" id="id" th:field="*{id}" type="hidden" /> <input
+						type="hidden" th:name="${_csrf.parameterName}"
+						th:value="${_csrf.token}" />
+
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group">
+								<input type="datetime-local" class="form-control-lg" id="data"
+									th:field="*{data}"
+									sec:authorize="hasRole('ROLE_CAIXAESPECIAL')" />
+							</div>
+						</div>
+
+						<input type="hidden" class="form-control" th:field="*{cesta}" />
+
+					</div>
+					<div class="row">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="tipo">Tipo</label><select class="form-control"
+									th:field="*{tipo}" id="tipo">
+									<option value="1">Entrada</option>
+									<option value="0">Saída</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group" id="formapagamento">
+								<label for="forma">Forma de Pagamento</label><select
+									class="form-control" th:field="*{forma}" id="forma">
+									<option th:each="ff : ${listaFormaPagamentos}" th:value="${ff}"
+										th:text="${ff}"></option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="valor">Valor(R$)</label> <input type="text"
+									class="form-control form-control-lg" id="valor"
+									th:field="*{valor}" />
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="valor">Venda</label> <input type="text"
+									class="form-control form-control" id="venda"
+									th:field="*{codigoVenda}" />
+							</div>
+						</div>
+
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="texto">Texto</label>
+								<textarea class="form-control" type="text" th:field="*{texto}"
+									id="texto" rows="3"> </textarea>
+							</div>
+						</div>
+
+						<div class="col-12">
+							<div class="row">
+								<div class="form-group col-lg-4">
+									<label for="registro"
+										sec:authorize="hasRole('ROLE_CAIXAESPECIAL')">Registro</label>
+									<a onclick="igual()" class="btn badge badge-primary">Igual
+										a data</a><input type="datetime-local" class="form-control"
+										th:field="*{registro}"
+										sec:authorize="hasRole('ROLE_CAIXAESPECIAL')" />
+								</div>
+
+								<div class="col-md-3">
+									<div class="form-group">
+										<label for="valor">Valor Bruto(R$)</label> <input type="text"
+											class="form-control form-control-lg" id="valor"
+											th:field="*{valorBruto}" />
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="form-group">
+							<button type="submit" class="p-2 btn btn-primary" id="salvar"
+								th:if="${caixa.id==0}">Salvar</button>
+							<button type="submit" class="p-2 btn btn-primary" id="salvar"
+								sec:authorize="hasRole('ROLE_CAIXAESPECIAL')"
+								th:if="${caixa.id!=0}">Salvar</button>
+
+							<a class="btn btn-secondary" th:href="@{/caixa/lista}">Lista</a>
+						</div>
+					</div>
+				</form>
+
+			</div>
+
+		</div>
+	</div>
+
+	<div class="modal modal-warning fade" id="modal-mensagem">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Mensagem</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p th:text="${mensagem}"></p>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" th:href="@{/caixa/lista}">Lista
+						Caixa</a> <a class="btn btn-success" th:href="@{/caixa/}">+
+						1(Novo)</a>
+					<button type="button" class="btn btn-dark" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div th:replace="fragmentos/js"></div>
+
+	<script th:inline="javascript">
+	 var isInlineEdit = [[${mensagem} != null ? true:false]];
+	 
+	  if(isInlineEdit){
+		  $(window).on('load', function() {
+				$('#modal-mensagem').modal('show');
+			});
+	      }
+	  function del(id,nome){
+		  var texto="Tem certeza da exclusão de "+nome+"?";
+		  texto=texto+"<p><p>";
+		  texto=texto+"<a class='btn btn-primary' onclick='$(\"#tutorModal\").modal(\"hide\")'>Não</a>";
+		  texto=texto+"<a class='btn btn-danger' href='/caixa/deletar/"+id+"'>Sim</a>";
+
+           $(".modal-body").html(texto);
+			$("#tutorModal").modal("show");
+	  }
+	  function igual(){
+		  $("#registro").val($("#data").val());
+	  }
+	  
+	  $("#formapagamento option[value='Dinheiro']").prop('selected', true);
+	  
+	</script>
+</body>
+</html>
