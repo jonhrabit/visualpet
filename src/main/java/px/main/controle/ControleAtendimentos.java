@@ -150,8 +150,8 @@ public class ControleAtendimentos {
 
 	@PostMapping("/salvar")
 	public ModelAndView salvar(@Valid Atendimento atendimento, BindingResult result, RedirectAttributes attributes) {
-		atendimentoService.salvar(atendimento);
-		ModelAndView model = new ModelAndView("redirect:/atendimento/" + atendimento.getId());
+		Atendimento at = atendimentoService.salvar(atendimento);
+		ModelAndView model = new ModelAndView("redirect:/atendimento/" + at.getId());
 		attributes.addFlashAttribute("mensagem", "Atendimento salvo com sucesso.");
 		return model;
 	}

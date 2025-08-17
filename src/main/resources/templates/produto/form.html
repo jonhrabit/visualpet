@@ -347,7 +347,6 @@
 			url: "/estoque/" + id,
 			success: function (result) {
 			    if(result!=null){
-				console.log(result);
 				 var texto="<div>";
 				  texto=texto+"<div class='row'><div class='col-6'>Texto<input class='form-control' id='texto"+id+"' value='"+result.texto+"'/></div>";
 				  texto=texto+"<div class='col-6'>Validade<input  class='form-control' id='validade"+id+"' value='"+formatDate(result.validade)+"' type='date'/></div></div>";

@@ -14,84 +14,55 @@
 
 	<div th:replace="~{fragmentos/menu}"></div>
 
-	<div id="read-me" class="m-2">
-		<h4>3.0 - 09/08/2025</h4>
-		<div>1. Implementação: Receituário.</div>
-		<div>2. Fix: selec de pets no formulário de prontuários.</div>
-		<div>3. Fix: selec de tutores no formulário de pets.</div>
-		<p></p>
-		<h4>2.1.7 - 25/07/2021</h4>
-		<div>1. Implementação: Calculo de prazo em dias uteis.</div>
-		<p></p>
-		<h4>2.1.6 - 05/05/2021</h4>
-		<div>1. Implementação: Importação de Nota Fiscal como entrada de estoque.</div>
-		<p></p>
-		<h4>2.1.5 - 28/04/2021</h4>
-		<div>1. Correção: Data do histórico do Pet e Cliente.</div>
-		<div>2. Correção: Sistema de Estoque.</div>
-		<div>3. Implementação: Módulo de Pacotes de Serviços</div>
-		<div>4. Exclusão: Módulo de Mensagens Nativo.</div>
-		<p></p>
-		<h4>2.1.4 - 12/04/2021</h4>
-		<div>1. Correção: Perda do histórico do Pet ao modificar cadastro do Tutor.</div>
-		<div>2. Correção: Consulta de Livro caixa pela forma de pagamento.</div>
-		<div>2.1. Correção: Formulário de edição option das formas de pagamento.</div>
-		<div>2.2. Correção: Botão de edição dos registros do livro caixa.</div>
-		<div>3. Implementação: Consulta junto ao Formulário de Produtos.</div>
-		<div>3. Correção: Exclusão de Clientes e Pets</div>
-		<p></p>
-		<h4>2.1.3 - 07/01/2021</h4>
-		<div>1. Relação de prontuários.</div>
-		<div>2. Histórico Pet e Tutor organizados com DataTable.</div>
-		<p></p>
-		<h4>2.1.3 - 07/01/2021</h4>
-		<div>1. Lista de recebidos no dia no fechamento de caixa.</div>
-		<div>2. Reorganização das formas de pagamentos.</div>
-		<div>3. Alteração da forma do cadastro de formas de pagamentos.</div>
-		<p></p>
-		<h4>2.1.2 - 07/12/2020</h4>
-		<div>1. Alteteração da disposição das páginas iniciais e login.</div>
-		<div>1.2 Criação do Relatórios/Sobre.</div>
-		<p></p>
-		<h4>2.1.1 - 29/11/2020</h4>
-		<div>1. Implementação - Relatório/Processamento/ticket médio.</div>
-		<div>1.2 Criação classe TicketView.</div>
-		<div>2. Implementação - Relatório/Processamento/lucro.</div>
-		<p></p>
-		<h4>2.0 - 26/11/2020</h4>
-		<div>1. Implementação da emissão de notas fiscais pelo NFe
-			WebService;</div>
-		<div>1.1 Adição do campo nf (Nota Fiscal) na tabela CESTA;</div>
-		<div>1.2 Implementação - Regra de acesso NFe para usuários;</div>
-		<div>1.3 Implementação - Relatorios/Nota Fiscal/Criar Lote-
-			Criar lotes de operações para gerar NFe;</div>
-		<div>1.4 Implementação - Relatorios/Nota Fiscal/Processamento-
-			Consulta o processamento do lote enviado à RF;</div>
-		<div>1.5 Implementação - Relatorios/Nota Fiscal/Consultar Notas-
-			Examina as notas arquivadas no servidor;</div>
-		<div>1.6 Implementação - Diretório resource */xml/**
-			disponibilizado;</div>
-		<div>1.7 Implementação - Download do XML da NFe.</div>
-		<p></p>
-		<h4>1.7.3 - 05/11/2020</h4>
-		<div>1. Fix - Perda do valor Bruto do caixa ao edita-lo.</div>
-		<div>1.1 Processamento botão fix repara os registros anteriores.</div>
-		<div>2. Fix - Pagamento zera os itens da cesta.</div>
-		<p></p>
-		<p></p>
-	</div>
-	<div class='container'>
-		<div class="mb-5 p-4 border border-dark">
-			<div>VisualPet - Sistema para gerenciamento de PetShops e
-				consultórios veterinários.</div>
-			<div>Desenvolvido por João Felipe Pereira Xavier.
-				email:joao.fpx@hotmail.com</div>
-			<span th:text="${software}">sdsdf</span> <span th:text="${versao}">sdsdf</span>
-
-			<p>©2020 Copyright, todos os direitos reservados</p>
-
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-lg-8">
+				<div class="card shadow-lg border-0 mb-4">
+					<div class="card-body p-5">
+						<div class="text-center mb-4">
+							<img src="/images/icon.png" alt="VisualPet" width="80" class="mb-2"/>
+							<h1 class="display-4 font-weight-bold">VisualPet</h1>
+							<h5 class="text-muted mb-2">Sistema para PetShops e Clínicas Veterinárias</h5>
+							<span class="badge badge-success">v3.0.0</span>
+							<span class="ml-2 text-secondary">17/08/2025</span>
+						</div>
+						<div class="alert alert-success text-center mb-4">
+							<b>Novidade:</b> Atualização para Spring Boot 3.5.4, Spring Security 6, Thymeleaf 3.1.2 e Java 22.<br>
+							<span class="text-dark">Impressão de receituário, melhorias de seleção e performance.</span>
+						</div>
+						<h4 class="mb-3">Histórico de Versões</h4>
+						<div style="max-height: 250px; overflow-y: auto;">
+							<ul class="timeline pl-3">
+								<li><b>3.0.0 - 17/08/2025:</b> Impressão de receituário, melhorias de seleção de pets/tutores, atualização de dependências.</li>
+								<li><b>2.1.7 - 25/07/2021:</b> Cálculo de prazo em dias úteis.</li>
+								<li><b>2.1.6 - 05/05/2021:</b> Importação de Nota Fiscal como entrada de estoque.</li>
+								<li><b>2.1.5 - 28/04/2021:</b> Correções em histórico, estoque e módulo de pacotes.</li>
+								<li><b>2.1.4 - 12/04/2021:</b> Correções em histórico e formas de pagamento.</li>
+								<li><b>2.1.3 - 07/01/2021:</b> Relação de prontuários, histórico com DataTable, melhorias no caixa.</li>
+								<li><b>2.1.2 - 07/12/2020:</b> Novos relatórios, melhorias visuais.</li>
+								<li><b>2.1.1 - 29/11/2020:</b> Relatórios de ticket médio e lucro.</li>
+								<li><b>2.0 - 26/11/2020:</b> Emissão de NFe, novos módulos fiscais.</li>
+								<li><b>1.7.3 - 05/11/2020:</b> Correções no caixa e pagamentos.</li>
+							</ul>
+						</div>
+						<hr>
+						<div class="text-center mt-4">
+							<p class="lead mb-1">Desenvolvido por <b>João Felipe Pereira Xavier</b></p>
+							<p class="mb-1">Contato: <a href="mailto:joao.fpx@hotmail.com">joao.fpx@hotmail.com</a></p>
+							<span th:text="${software}"></span> <span th:text="${versao}"></span>
+							<p class="text-muted mt-2 mb-0">&copy;2020-2025 Todos os direitos reservados</p>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
+
+	<style>
+		.timeline li {
+			margin-bottom: 0.5rem;
+		}
+	</style>
 
 	<div th:replace="~{fragmentos/js}"></div>
 

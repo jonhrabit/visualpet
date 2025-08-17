@@ -1,4 +1,3 @@
-console.log("Ticket js ON.")
 
 function ticket() {
     let dd = new Date();
@@ -10,7 +9,6 @@ function ticket() {
 		.ajax({
 		    url : "/cesta/ticket/" + ano,
 		    success : function(result) {
-			console.log(result);
 			$("#dialogo").modal("hide");
 			$("#resultado").html("");
 			$('#resultado').append(
@@ -96,7 +94,6 @@ function DATA(data) {
     return dataFormatada;
 }
 function dialogo_loading() {
-    console.log($("#dialogo").length);
     if ($("#dialogo").length) {
 	$("#dialogo").modal("dispose");
     } else {

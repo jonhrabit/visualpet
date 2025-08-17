@@ -291,8 +291,7 @@
 
 	<script th:inline="javascript">
 	
-	var infos = [[${cliente.informacoes}]];
-	console.log(infos);
+	var infos = /* [[${cliente.informacoes}]] */[];
 	var tableInfo =  $("#tableInfos")
 	.DataTable(
 		{

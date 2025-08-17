@@ -59,8 +59,7 @@
 
 	<div th:replace="~{fragmentos/js}"></div>
 	<script th:inline="javascript">
-	var lista = [[${lista}]];
-	console.log(lista);
+	var lista = /* [[${lista}]] */[];
 	var tabela = $("#tabela")
 		.DataTable(
 			{

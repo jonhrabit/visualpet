@@ -40,7 +40,6 @@ function criar_tabela_tutor(dados, name_div) {
 	$("#modal_tabela").modal("show");
 }
 function criar_tabela_pet(dados, name_div) {
-	console.log(dados);
 	$(name_div).html("");
 	var table = $('<table></table>').addClass("table");
 	var row;
@@ -226,7 +225,6 @@ function tabela(dados, name_div){
 	$(name_div).html("");
 	var table = $('<table></table>').addClass("table");
 	let row, d, dataFormatada, ultimaData, link;
-		console.log(dados);
 	
 	for (var i = 0; i < dados.length; i++) {
 		d = new Date(dados[i].agenda);

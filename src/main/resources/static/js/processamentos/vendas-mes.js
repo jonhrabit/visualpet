@@ -1,4 +1,3 @@
-console.log("relatorio js ON.")
 
 var d = new Date();
 $("#ano").val(d.getFullYear());

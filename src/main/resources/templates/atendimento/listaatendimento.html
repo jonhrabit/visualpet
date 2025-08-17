@@ -116,6 +116,8 @@
 
 	</div>
 	<div id="tabela"></div>
+
+	
 	<div class="modal" id="modal_tabela" data-backdrop="static">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -142,12 +144,10 @@
 			});
 		}
 		function iniciar(id){
-			console.log("iniciar id: "+ id)
 			$.ajax({
 				url: "/atendimento/iniciar/"+id,
 				success: function (result) {
 					if(result==true){
-						console.log("iniciado o " + id);
 						$("#atendimento"+id).addClass('table-primary');
 					}
 				}

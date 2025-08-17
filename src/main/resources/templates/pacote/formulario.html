@@ -82,7 +82,6 @@
 		    async : false,
 		    success : function(result) {
 			pets = result;
-			console.log(pets);
 		    }
 		});
 		var servicos = [];
@@ -164,8 +163,6 @@
 		type : "POST",
 		contentType : 'application/json',
 		success : function(result) {
-		    console.log("pacote salvo com sucesso.");
-		    console.log(result);
 		    pacote = result;
 		}
 	    });
@@ -174,7 +171,6 @@
 
 	function gravar() {
 	    let pac = post_pacote();
-	    console.log(pac);
 	    let valido = true;
 	    let resultado = [];
 	    for (let i = 0; i < $("#tamanho").val(); i++) {
@@ -207,7 +203,6 @@
 			type : "POST",
 			contentType : 'application/json',
 			error : function(result) {
-			    console.log(result);
 			    alert(result);
 			}
 		    });
