@@ -23,6 +23,7 @@ import px.main.veterinaria.view.AtendimentoConsultaView;
 public class AtendimentoService {
 	@Autowired
 	AtendimentoRepository atendimentoRepository;
+	
 	@Autowired
 	PetService petService;
 	@Autowired
@@ -113,7 +114,7 @@ public class AtendimentoService {
 
 	public boolean finalizado(Integer id) {
 		Optional<Atendimento> atendimento = atendimentoRepository.findById(id);
-		if (!atendimento.isEmpty())
+		if (atendimento.isPresent())
 			if (atendimento.get().getSituacao() == SituacaoAtendimento.FINALIZADO)
 				return true;
 		return false;

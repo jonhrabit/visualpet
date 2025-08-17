@@ -4,13 +4,14 @@
 <meta charset="utf-8"></meta>
 <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
 
-<link th:replace="fragmentos/css"></link>
+<link th:replace="~{fragmentos/css}"></link>
 <title>Pet</title>
 <link rel="icon" href="/images/icon.png"></link>
+
 </head>
 
 <body>
-	<div th:replace="fragmentos/menu"></div>
+	<div th:replace="~{fragmentos/menu}"></div>
 
 	<ul class="nav nav-tabs">
 		<li class="nav-item"><a class="nav-link active" href="#home"
@@ -39,7 +40,7 @@
 
 							<div class="col-md-9">
 								<div class="form-group">
-									<label for="nome" style="font-color: white">Nome</label> <input
+									<label for="nome">Nome</label> <input
 										class="form-control" type="text" th:field="*{nome}" id="nome" />
 								</div>
 							</div>
@@ -101,12 +102,15 @@
 										th:href="@{/cliente/__${pet.tutor.id}__}">Acessar Tutor</a>
 								</div>
 
+								
 								<div class="form-group">
-									<label for="tutor">Tutor </label> <select id="tutor"
-										class="form-control" th:field="*{tutor}">
-										<option th:each="cliente : ${listaclientes}"
-											th:value="${cliente.id}" th:text="${cliente.nome}"></option>
-									</select>
+<label for="dataTutor" class="form-label">Tutor</label>
+<input class="form-control" list="datalistOptions" id="dataTutor" placeholder="Tutor" autocomplete="off" th:value="${pet.tutor != null ? pet.tutor.nome + '  ' + pet.tutor.celular : ''}">
+<input type="hidden" th:field="*{tutor}" id="tutorId">
+<datalist id="datalistOptions">
+  <option th:each="cliente : ${listaclientes}" th:value="|${cliente.nome}  ${cliente.celular}|" th:data-id="${cliente.id}"></option>
+</datalist>
+
 								</div>
 							</div>
 						</div>
@@ -287,11 +291,28 @@
 	</div>
 
 
-	<div th:replace="fragmentos/js"></div>
+	<div th:replace="~{fragmentos/js}"></div>
 
 
 	<script th:inline="javascript">
-		var infos = [[${pet.informacoes}]];
+
+ document.getElementById('dataTutor').addEventListener('input', function(e) {
+    var input = e.target.value;
+    var options = document.getElementById('datalistOptions').options;
+    var tutorId = '';
+    for (var i = 0; i < options.length; i++) {
+      if (options[i].value === input) {
+        tutorId = options[i].getAttribute('data-id');
+        break;
+      }
+    }
+    document.getElementById('tutorId').value = tutorId;
+  });
+
+
+
+
+		var infos = /* [[${pet.informacoes}]] */[];
 		console.log(infos);
 		var tableInfo =  $("#tableInfos")
 		.DataTable(
@@ -340,7 +361,7 @@
 	
 	
 	
-		var isInlineEdit = [[${ mensagem } != null ? true : false]];
+		var isInlineEdit = /* [[${ mensagem } != null ? true : false]] */false;
 		setData("#vigencia",1);
 		setData("#dia",0);
 		function setData(div_name,ano){
@@ -514,7 +535,6 @@
 			
 			
 		}
-
 	</script>
 </body>
 </html>

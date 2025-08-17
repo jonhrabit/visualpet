@@ -27,6 +27,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 	@Query("Select c from Cliente c where c.nome like %?1% order by c.nome ASC")
 	public List<Cliente> searchNome(String nome);
 	
+			@SuppressWarnings("null")
 	public void deleteById(Integer id);
 	
 }

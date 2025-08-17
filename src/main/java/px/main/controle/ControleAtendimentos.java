@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,11 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.validation.Valid;
 import px.main.veterinaria.modelos.Atendimento;
 import px.main.veterinaria.modelos.Cliente;
 import px.main.veterinaria.modelos.Pet;
@@ -52,7 +50,7 @@ public class ControleAtendimentos {
 	@Autowired
 	private ProdutoService produtoService;
 
-	@RequestMapping(value = "/lista", method = RequestMethod.GET)
+	@GetMapping("/lista")
 	public ModelAndView lista(AtendimentoListaView atendimentoListaView) {
 		ModelAndView model = new ModelAndView("atendimento/listaatendimento");
 		model.addObject("atendimentoView", atendimentoListaView);
@@ -65,7 +63,7 @@ public class ControleAtendimentos {
 		return servicoRepository.findAll();
 	}
 
-	@RequestMapping(value = "/atualizar/{tipo}", method = RequestMethod.GET)
+	@GetMapping("/atualizar/{tipo}")
 	public @ResponseBody List<Atendimento> atualizarLista(@PathVariable Integer tipo) {
 		if (tipo == 99) {
 			return atendimentoService.semana();
@@ -74,13 +72,13 @@ public class ControleAtendimentos {
 		}
 	}
 
-	@RequestMapping(value = "/lista/{id}", method = RequestMethod.GET)
+	@GetMapping("/lista/{id}")
 	public ModelAndView filtro(@PathVariable Integer id, AtendimentoListaView atendimentoListaView) {
 		atendimentoListaView.setIdTipo(id);
 		return lista(atendimentoListaView);
 	}
 
-	@RequestMapping(value = "/consulta", method = RequestMethod.GET)
+	@GetMapping("/consulta")
 	public ModelAndView consulta(AtendimentoConsultaView atendimenentoConsultaView) {
 		ModelAndView model = new ModelAndView("atendimento/lista");
 		model.addObject("listaservico", servicoRepository.findAll());
@@ -99,12 +97,12 @@ public class ControleAtendimentos {
 		return model;
 	}
 
-	@RequestMapping(value = "/teste", method = RequestMethod.GET)
+	@GetMapping("/teste")
 	public ModelAndView mns() {
 		return consulta("teste de mensagem.");
 	}
 
-	@RequestMapping(value = "/pendentes", method = RequestMethod.GET)
+	@GetMapping("/pendentes")
 	public ModelAndView pendentes() {
 		ModelAndView model = new ModelAndView("atendimento/listapendentes");
 		model.addObject("lista", atendimentoService.aReceber());
@@ -121,36 +119,36 @@ public class ControleAtendimentos {
 		return model;
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@GetMapping("/{id}")
 	public ModelAndView atendimento(@PathVariable Integer id) {
 		return novo(atendimentoService.get(id));
 	}
 
-	@RequestMapping(value = "/iniciar/{id}", method = RequestMethod.GET)
+	@GetMapping("/iniciar/{id}")
 	public @ResponseBody boolean iniciar(@PathVariable Integer id) {
 		atendimentoService.iniciar(id);
 		return true;
 	}
 
-	@RequestMapping(value = "/finalizar/{id}", method = RequestMethod.GET)
+	@GetMapping("/finalizar/{id}")
 	public @ResponseBody boolean finalizar(@PathVariable Integer id) {
 		atendimentoService.finalizar(id, BigDecimal.ZERO, 4);
 		return true;
 	}
 
-	@RequestMapping(value = "/confiar/{id}", method = RequestMethod.GET)
+	@GetMapping("/confiar/{id}")
 	public @ResponseBody boolean pendurar(@PathVariable Integer id) {
 		atendimentoService.pendurar(id);
 		return true;
 	}
 
-	@RequestMapping(value = "/cancelar/{id}", method = RequestMethod.GET)
+	@GetMapping("/cancelar/{id}")
 	public @ResponseBody boolean cancelar(@PathVariable Integer id) {
 		atendimentoService.cancelar(id);
 		return true;
 	}
 
-	@RequestMapping(value = "/salvar", method = RequestMethod.POST)
+	@PostMapping("/salvar")
 	public ModelAndView salvar(@Valid Atendimento atendimento, BindingResult result, RedirectAttributes attributes) {
 		atendimentoService.salvar(atendimento);
 		ModelAndView model = new ModelAndView("redirect:/atendimento/" + atendimento.getId());
@@ -158,7 +156,7 @@ public class ControleAtendimentos {
 		return model;
 	}
 
-	@RequestMapping(value = "/salvarPratico", method = RequestMethod.GET)
+	@GetMapping("/salvarPratico")
 	public ModelAndView salvarPratico(AtendimentoListaView atendimento, BindingResult result,
 			RedirectAttributes attributes) {
 		if ((atendimento.getData() != null) && (atendimento.getPet() != "") && (atendimento.getTutor() != "")
@@ -179,7 +177,7 @@ public class ControleAtendimentos {
 		return model;
 	}
 
-	@RequestMapping(value = "/deletar/{id}", method = RequestMethod.GET)
+	@GetMapping("/deletar/{id}")
 	public ModelAndView deletar(@PathVariable Integer id, RedirectAttributes attributes) {
 		atendimentoService.deletar(id);
 		ModelAndView model = new ModelAndView("redirect:/atendimento/lista");
@@ -187,7 +185,7 @@ public class ControleAtendimentos {
 		return model;
 	}
 
-	@RequestMapping(value = "/produtos/{id}", method = RequestMethod.GET)
+	@GetMapping("/produtos/{id}")
 	public ModelAndView listaProdutos(@PathVariable Integer id) {
 		Atendimento atendimento = atendimentoService.get(id);
 		ModelAndView model = new ModelAndView("atendimento/produtosatendimento");
@@ -212,7 +210,7 @@ public class ControleAtendimentos {
 		return atendimentoService.get(id).getProdutos();
 	}
 
-	@RequestMapping(value = "/salvarprodutos", method = RequestMethod.POST)
+	@PostMapping("/salvarprodutos")
 	public ResponseEntity<?> salvarProdutos(@RequestBody AtendimentoProdutosView view) {
 		Atendimento atendimento = atendimentoService.get(view.getId());
 
@@ -238,7 +236,7 @@ public class ControleAtendimentos {
 		return ResponseEntity.ok(atendimento.getProdutos());
 	}
 
-	@RequestMapping(value = "/baixarprodutos/{id}", method = RequestMethod.GET)
+	@GetMapping("/baixarprodutos/{id}")
 	public ModelAndView baixarProdutos(@PathVariable Integer id) {
 		Atendimento atendimento = atendimentoService.get(id);
 		for (ProdutoAtendimento prod : atendimento.getProdutos()) {
@@ -249,7 +247,7 @@ public class ControleAtendimentos {
 		return listaProdutos(atendimento.getId(), "Produtos baixados do estoque.");
 	}
 
-	@RequestMapping(value = "/venda", method = RequestMethod.GET)
+	@GetMapping("/venda")
 	public @ResponseBody boolean atendimentoVenda(Integer id, boolean venda) {
 		Atendimento atendimento = atendimentoService.get(id);
 		atendimento.setVenda(venda);
@@ -263,7 +261,7 @@ public class ControleAtendimentos {
 		if (pet.isEmpty())
 			return "Não foi localizado o Pet de id " + atendimento.getPet().getId();
 		atendimento.setPet(pet.get());
-		atendimento.setServico(servicoRepository.getOne(atendimento.getServico().getId()));
+		atendimento.setServico(servicoRepository.findById(atendimento.getServico().getId()).get());
 		atendimento = atendimentoService.salvar(atendimento);
 		return "Atendimento registrado com sucesso(" + atendimento.getId() + ")";
 	}

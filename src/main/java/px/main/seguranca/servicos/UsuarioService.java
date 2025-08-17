@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import px.main.seguranca.modelos.Usuario;
@@ -13,6 +14,8 @@ import px.main.seguranca.repository.UsuarioRepository;
 public class UsuarioService {
 	@Autowired
 	UsuarioRepository usuarioRepository;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	public List<Usuario> All() {
 		return usuarioRepository.findAll();
@@ -29,6 +32,7 @@ public class UsuarioService {
 			return false;
 		}
 	}
+
 	public Usuario get(Integer id) {
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
 		if (usuario.isEmpty()) {
@@ -36,6 +40,7 @@ public class UsuarioService {
 		}
 		return usuario.get();
 	}
+
 	public Usuario get(String login) {
 		Optional<Usuario> usuario = usuarioRepository.findByLogin(login);
 		if (usuario.isEmpty()) {
@@ -43,6 +48,7 @@ public class UsuarioService {
 		}
 		return usuario.get();
 	}
+
 	public boolean deletar(Integer id) {
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
 		if (usuario.isEmpty()) {
@@ -51,8 +57,19 @@ public class UsuarioService {
 		usuarioRepository.deleteById(id);
 		return true;
 	}
+
 	public String getSenhaPublic(String login) {
 		return usuarioRepository.getSenhaPublica(login);
+	}
+
+	public boolean alterarSenha(String senhaAntiga, String senhaNova) {
+		Usuario user = this.get(UsuarioLogado.get());
+		if (passwordEncoder.matches(senhaAntiga, user.getSenha())) {
+			user.setSenha(passwordEncoder.encode(senhaNova));
+			usuarioRepository.save(user);
+			return true;
+		}
+		return false;
 	}
 
 }

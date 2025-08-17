@@ -1,28 +1,27 @@
 package px.main.veterinaria.modelos;
 
-import static javax.persistence.GenerationType.IDENTITY;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
-import px.main.controle.Controle;
+import px.main.seguranca.servicos.UsuarioLogado;
 
 @Getter
 @Setter
@@ -30,7 +29,7 @@ import px.main.controle.Controle;
 @Table(name = "clientes")
 public class Cliente {
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@Basic(optional = false)
@@ -96,11 +95,11 @@ public class Cliente {
 		this.celular = celular;
 		this.pets = new ArrayList<Pet>();
 		this.pets.add(new Pet(pet, this));
-		this.pets.get(0).getInformacoes().add(new PetInformacao("Sistema",
-				"Pet cadastrado pelo usuário " + Controle.usuarioAtivo(), BigDecimal.ZERO, this.pets.get(0), 0));
+		this.pets.getFirst().getInformacoes().add(new PetInformacao("Sistema",
+				"Pet cadastrado pelo usuário " + UsuarioLogado.get(), BigDecimal.ZERO, this.pets.getFirst(), 0));
 		this.informacoes = new ArrayList<ClienteInformacao>();
 		this.informacoes.add(new ClienteInformacao("Sistema",
-				"Cliente cadastrado pelo usuário " + Controle.usuarioAtivo(), BigDecimal.ZERO, this, 0));
+				"Cliente cadastrado pelo usuário " + UsuarioLogado.get(), BigDecimal.ZERO, this, 0));
 		this.informacoes.add(new ClienteInformacao("Pet", "Pet " + pet, BigDecimal.ZERO, this, 0));
 	}
 

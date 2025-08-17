@@ -10,12 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -55,7 +50,7 @@ public class ControleCesta {
 	@Autowired
 	PacoteService pacoteService;
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@GetMapping("/{id}")
 	public ModelAndView cesta(@PathVariable Integer id) {
 		ModelAndView model = new ModelAndView("produto/cestaForm");
 		Cesta cesta = cestaService.get(id);
@@ -110,7 +105,7 @@ public class ControleCesta {
 		return cesta();
 	}
 
-	@RequestMapping(value = "/addservico", method = RequestMethod.GET)
+	@GetMapping("/addservico")
 	public @ResponseBody Integer addAtendimento(Integer id) {
 		Atendimento atendimento = atendimentoService.get(id);
 		Integer count = 0;
@@ -156,7 +151,7 @@ public class ControleCesta {
 		return true;
 	}
 
-	@RequestMapping(value = "/pagar", method = RequestMethod.GET)
+	@GetMapping("/pagar")
 	public @ResponseBody Cesta pagar(@RequestParam Integer forma, @RequestParam Integer clienteId,
 			@RequestParam Integer vezes, @RequestParam BigDecimal valor) {
 		if (cesta.getProdutos().isEmpty()) {
@@ -189,7 +184,7 @@ public class ControleCesta {
 		return total;
 	}
 
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	@GetMapping("/add")
 	public @ResponseBody boolean searchProdutos(Integer id, Integer quantidade) {
 		ProdutoCesta prod = produtoService.getEstoque(id);
 		if (prod.getIdProdutoOriginal() == null)
@@ -207,7 +202,7 @@ public class ControleCesta {
 		return true;
 	}
 
-	@RequestMapping(value = "/remover", method = RequestMethod.GET)
+	@GetMapping("/remover")
 	public @ResponseBody boolean removerProdutos(Integer id) {
 		if (!cesta.getProdutos().isEmpty())
 			for (ProdutoCesta p : cesta.getProdutos()) {
@@ -219,13 +214,13 @@ public class ControleCesta {
 		return true;
 	}
 
-	@RequestMapping(value = "/down", method = RequestMethod.GET)
+	@GetMapping("/down")
 	public @ResponseBody boolean downProdutos(Integer id) {
 		cesta.produtoDown(id, 1);
 		return true;
 	}
 
-	@RequestMapping(value = "/atualizar", method = RequestMethod.GET)
+	@GetMapping("/atualizar")
 	public ResponseEntity<?> atualizar() {
 		return ResponseEntity.ok(cesta.getProdutos());
 	}
@@ -239,7 +234,7 @@ public class ControleCesta {
 		return model;
 	}
 
-	@RequestMapping(value = "/consultar", method = RequestMethod.POST)
+	@PostMapping("/consultar")
 	public ModelAndView consulta(CestaConsultaView cestaConsultaView) {
 		cestaConsultaView = cestaService.consultar(cestaConsultaView);
 		return consultar(cestaConsultaView);

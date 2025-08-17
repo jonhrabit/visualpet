@@ -9,11 +9,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import px.main.controle.Controle;
+import px.main.seguranca.servicos.UsuarioLogado;
 import px.main.veterinaria.modelos.Cliente;
 import px.main.veterinaria.modelos.Pet;
 import px.main.veterinaria.modelos.PetInformacao;
 import px.main.veterinaria.modelos.Vacina;
+import px.main.veterinaria.repository.AtendimentoRepository;
 import px.main.veterinaria.repository.PetRepository;
 import px.main.veterinaria.repository.VacinaRepository;
 
@@ -24,7 +25,7 @@ public class PetService {
 	@Autowired
 	VacinaRepository vacinaRepository;
 	@Autowired
-	AtendimentoService atendimentoService;
+	AtendimentoRepository atendimentoRepository;
 
 	public List<Pet> All() {
 		return petRepository.findAllByOrderByNomeAsc();
@@ -45,7 +46,7 @@ public class PetService {
 
 	public boolean exist(Pet pet) {
 		Optional<Pet> petConsulta = petRepository.findByNomeAndByTutor(pet.getNome(), pet.getTutor().getNome());
-		if (!petConsulta.isEmpty()) {
+		if (petConsulta.isPresent()) {
 			return true;
 		} else {
 			return false;
@@ -55,7 +56,8 @@ public class PetService {
 	public boolean delete(Integer id) {
 		if (petRepository.findById(id).isEmpty())
 			return false;
-		atendimentoService.deletarByPet(id);
+
+		atendimentoRepository.deleteByPet(id);
 		vacinaRepository.deleteByPet(id);
 		petRepository.deleteById(id);
 		return true;
@@ -64,13 +66,13 @@ public class PetService {
 	public Pet salvar(Pet pet) {
 		if (pet.isNovo()) {
 			pet.getInformacoes().add(new PetInformacao("Sistema",
-					"Pet cadastrado pelo usuário " + Controle.usuarioAtivo(), BigDecimal.ZERO, pet, 0));
+					"Pet cadastrado pelo usuário " + UsuarioLogado.get(), BigDecimal.ZERO, pet, 0));
 
 		} else {
 			Pet petAntigo = this.get(pet.getId());
 			pet.setInformacoes(petAntigo.getInformacoes());
 			pet.getInformacoes().add(new PetInformacao("Sistema",
-					"Pet alterado pelo usuário " + Controle.usuarioAtivo(), BigDecimal.ZERO, pet, 0));
+					"Pet alterado pelo usuário " + UsuarioLogado.get(), BigDecimal.ZERO, pet, 0));
 		}
 		return petRepository.save(pet);
 	}
@@ -108,7 +110,7 @@ public class PetService {
 		Pet pet = this.get(petId);
 		for (Vacina v : pet.getVacinas()) {
 			if (v.getId().equals(vacinaId)) {
-				this.anotar(petId, "Vacina", v.getNome() + " - excluida pelo usuário " + Controle.usuarioAtivo(), 0);
+				this.anotar(petId, "Vacina", v.getNome() + " - excluida pelo usuário " + UsuarioLogado.get(), 0);
 				vacinaRepository.delete(v);
 				return true;
 			}

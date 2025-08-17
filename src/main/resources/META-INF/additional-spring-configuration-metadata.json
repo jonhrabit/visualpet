@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "fotos.path",
+    "type": "java.lang.String",
+    "description": "A description for 'fotos.path'"
+  },
+  {
+    "name": "vendas.credito.prazo",
+    "type": "java.lang.String",
+    "description": "A description for 'vendas.credito.prazo'"
+  },
+  {
+    "name": "application-version",
+    "type": "java.lang.String",
+    "description": "A description for 'application-version'"
+  },
+  {
+    "name": "application-artifactId",
+    "type": "java.lang.String",
+    "description": "A description for 'application-artifactId'"
+  }
+]}

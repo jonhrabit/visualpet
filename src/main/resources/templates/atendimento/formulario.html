@@ -5,17 +5,15 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
-	integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt"
-	crossorigin="anonymous" />
+
+<link th:replace="~{fragmentos/css}"></link>
 
 <title>Atendimento</title>
 <link rel="icon" href="/images/icon.png" />
 </head>
 <body>
 
-	<div th:replace="fragmentos/menu"></div>
+	<div th:replace="~{fragmentos/menu}"></div>
 
 	<div class="container" style="padding: 20">
 
@@ -75,13 +73,26 @@
 			</div>
 			<div class="row">
 				<div class="col-md-6">
-					<div class="form-group">
-						<label for="pet">Pet</label><select id="pet" class="form-control"
-							th:field="*{pet}">
-							<option th:each="pet : ${listapet}" th:value="${pet.id}"
-								th:text="|${pet.nome} - ${pet.tutor.nome}|"></option>
-						</select>
-					</div>
+					 <div class="form-group">
+                  <label for="dataPet" class="form-label">Pet</label>
+                  <input
+                    class="form-control"
+                    list="datalistOptions"
+                    id="dataPet"
+                    placeholder="Pet"
+                    autocomplete="off"
+                    th:value="${atendimento.pet != null ? atendimento.pet.nome + ' ' + atendimento.pet.tutor.nome: ''}"
+                  />
+                  <input type="hidden" th:field="*{pet}" id="petId" />
+                  <datalist id="datalistOptions">
+                    <option
+                      th:each="pet : ${listapet}"
+                      th:value="|${pet.nome} - ${pet.tutor.nome}|"
+                      th:text="|${pet.nome} - ${pet.tutor.nome}|"
+                      th:data-id="${pet.id}"
+                    ></option>
+                  </datalist>
+                </div>
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
@@ -149,22 +160,27 @@
 			</div>
 		</div>
 	</div>
-
-	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js"
-		integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P"
-		crossorigin="anonymous"></script>
+	<script th:replace="~{fragmentos/js}"></script>
 
 
 	<script th:inline="javascript">
 	
-	 var isInlineEdit = [[${mensagem} != null ? true:false]];
+	 var isInlineEdit = /* [[${mensagem} != null ? true:false]] */false;
 	 
+	 document.getElementById('dataPet').addEventListener('input', function(e) {
+         var input = e.target.value;
+         var options = document.getElementById('datalistOptions').options;
+         var petId = '';
+         for (var i = 0; i < options.length; i++) {
+           if (options[i].value === input) {
+             petId = options[i].getAttribute('data-id');
+             break;
+           }
+         }
+         document.getElementById('petId').value = petId;
+       });
+
+
 	  if(isInlineEdit){
 		  $(window).on('load', function() {
 				$('#modal-mensagem').modal('show');

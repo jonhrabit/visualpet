@@ -36,8 +36,8 @@ public interface CaixaRepository extends JpaRepository<Caixa, Integer> {
 	@Query("SELECT SUM(u.valor) from Caixa u where u.data BETWEEN ?1 and ?2 and u.texto like %?3%")
 	double getTotal(Date data1, Date data2, String pag);
 
-	@Query("SELECT c from Caixa c WHERE c.codigoVenda is null AND c.tipo=1 AND c.forma>=2")
-	List<Caixa> notCodigoVenda();
+/* 	@Query("SELECT c from Caixa c WHERE c.codigoVenda is null AND c.tipo=1 AND c.forma>=2")
+	List<Caixa> notCodigoVenda(); */
 
 	List<Caixa> findByCodigoVenda(String codigoVenda);
 

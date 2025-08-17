@@ -15,7 +15,7 @@
 }
 </style>
 
-<link th:replace="fragmentos/css"></link>
+<link th:replace="~{fragmentos/css}"></link>
 
 <title>Relatório</title>
 <link rel="icon" href="/images/icon.png" />
@@ -292,7 +292,7 @@
 		</div>
 	</div>
 
-	<div th:replace="fragmentos/js"></div>
+	<div th:replace="~{fragmentos/js}"></div>
 
 	<script th:inline="javascript">
 		var relatorio =[[${relatorio}]];

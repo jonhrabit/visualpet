@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import px.main.controle.Controle;
+import px.main.seguranca.servicos.UsuarioLogado;
 import px.main.veterinaria.modelos.Cliente;
 import px.main.veterinaria.modelos.ClienteInformacao;
 import px.main.veterinaria.modelos.Pet;
@@ -79,12 +79,12 @@ public class ClienteService {
 		Cliente clienteAntigo = this.get(cliente.getId());
 		if (cliente.isNovo()) {
 			cliente.getInformacoes().add(new ClienteInformacao("Sistema",
-					"Cadastro realizado por " + Controle.usuarioAtivo(), BigDecimal.ZERO, cliente, 0));
+					"Cadastro realizado por " + UsuarioLogado.get(), BigDecimal.ZERO, cliente, 0));
 
 		} else {
 			cliente.setInformacoes(clienteAntigo.getInformacoes());
 			cliente.getInformacoes().add(new ClienteInformacao("Sistema",
-					"Alteração realizada por " + Controle.usuarioAtivo(), BigDecimal.ZERO, cliente, 0));
+					"Alteração realizada por " + UsuarioLogado.get(), BigDecimal.ZERO, cliente, 0));
 		}
 		for (Pet petCliente : cliente.getPets()) {
 			petCliente.setTutor(cliente);
@@ -108,7 +108,7 @@ public class ClienteService {
 			if (!cliente.contemPet(atendimentoListaView.getPet())) {
 				Pet novoPet = new Pet(atendimentoListaView.getPet(), cliente);
 				novoPet.getInformacoes().add(new PetInformacao("Sistema",
-						"Pet cadastrado pelo usuário " + Controle.usuarioAtivo(), BigDecimal.ZERO, novoPet, 0));
+						"Pet cadastrado pelo usuário " + UsuarioLogado.get(), BigDecimal.ZERO, novoPet, 0));
 				cliente.getInformacoes().add(new ClienteInformacao("Pet", "Pet " + atendimentoListaView.getPet(),
 						BigDecimal.ZERO, cliente, 0));
 				cliente.getPets().add(novoPet);

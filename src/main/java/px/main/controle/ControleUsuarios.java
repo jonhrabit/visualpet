@@ -1,16 +1,15 @@
 package px.main.controle;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import jakarta.validation.Valid;
 import px.main.seguranca.modelos.Regras;
 import px.main.seguranca.modelos.Usuario;
 import px.main.seguranca.modelos.UsuarioRegra;
@@ -22,8 +21,6 @@ import px.main.seguranca.views.Alterarsenha;
 public class ControleUsuarios {
 	@Autowired
 	UsuarioService usuarioService;
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@RequestMapping(value = "/lista")
 	public ModelAndView lista() {
@@ -31,6 +28,7 @@ public class ControleUsuarios {
 		model.addObject("lista", usuarioService.All());
 		return model;
 	}
+
 	public ModelAndView lista(String mensagem) {
 		ModelAndView model = new ModelAndView("usuario/lista");
 		model.addObject("lista", usuarioService.All());
@@ -45,6 +43,7 @@ public class ControleUsuarios {
 		model.addObject("listaRegras", Regras.values());
 		return model;
 	}
+
 	public ModelAndView novo(@Valid Usuario usuario, String mensagem) {
 		ModelAndView model = new ModelAndView("usuario/formulario");
 		model.addObject("usuario", usuario);
@@ -53,30 +52,28 @@ public class ControleUsuarios {
 		return model;
 	}
 
-	@RequestMapping(value = "/salvar", method = RequestMethod.POST)
+	@PostMapping("/salvar")
 	public ModelAndView salvar(@Valid Usuario usuario) {
-		if ((usuario.getNome().equals(""))&&(usuario.getLogin().equals(""))) {
-			return novo(usuario,"Informe o nome do usuário.");
+		if ((usuario.getNome().equals("")) && (usuario.getLogin().equals(""))) {
+			return novo(usuario, "Informe o nome do usuário.");
 		}
 		for (UsuarioRegra regra : usuario.getRegras()) {
 			regra.setUsuario(usuario);
 		}
 		if (usuario.isNovo()) {
-			usuario.setSenha(usuario.getLogin(), bCryptPasswordEncoder);
+			usuario.setSenha(usuario.getLogin());
 		} else {
 			usuario.setSenhaPublica(usuarioService.getSenhaPublic(usuario.getLogin()));
 		}
 		usuarioService.salvar(usuario);
-		return novo(usuario,"Usuário salvo com sucesso");
+		return novo(usuario, "Usuário salvo com sucesso");
 	}
 
-	@RequestMapping(value = "/salvarsenha", method = RequestMethod.POST)
+	@PostMapping("/salvarsenha")
 	public ModelAndView alterar(@Valid Alterarsenha view) {
 		if (view.CompararSenhas()) {
-			Usuario user = usuarioService.get(Controle.usuarioAtivo());
-			if (bCryptPasswordEncoder.matches(view.getSenha(), user.getSenha())) {
-				user.setSenha(view.getNova(), bCryptPasswordEncoder);
-				usuarioService.salvar(user);
+			if (usuarioService.alterarSenha(view.getSenha(), view.getNova())) {
+
 				ModelAndView model = new ModelAndView("usuario/alterarsenha");
 				model.addObject("view", view);
 				model.addObject("m1", "Senha alterada com sucesso.");
@@ -89,12 +86,12 @@ public class ControleUsuarios {
 			}
 		}
 		ModelAndView model = new ModelAndView("usuario/alterarsenha");
-		model.addObject("m2", "Nova Senha informada não confere.");
+		model.addObject("m2", "Nova Senha informada não confer.");
 		model.addObject("view", new Alterarsenha());
 		return model;
 	}
 
-	@RequestMapping(value = "/alterarsenha", method = RequestMethod.GET)
+	@GetMapping("/alterarsenha")
 	public ModelAndView alterar() {
 		ModelAndView model = new ModelAndView("usuario/alterarsenha");
 		model.addObject("view", new Alterarsenha());
@@ -102,25 +99,25 @@ public class ControleUsuarios {
 
 	}
 
-	@RequestMapping(value = "/reset/{id}", method = RequestMethod.GET)
+	@GetMapping("/reset/{id}")
 	public ModelAndView reset(@PathVariable Integer id) {
 		Usuario usuario = usuarioService.get(id);
 		if (!usuario.isNovo()) {
-			usuario.setSenha(usuario.getLogin(), bCryptPasswordEncoder);
+			usuario.setSenha(usuario.getLogin());
 			usuarioService.salvar(usuario);
 		}
 		return lista();
 
 	}
 
-	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	@GetMapping("/delete/{id}")
 	public ModelAndView delete(@PathVariable Integer id) {
 		usuarioService.deletar(id);
 		return lista("Usuario excluído com sucesso.");
 
 	}
 
-	@RequestMapping(value = "/qdelete/{id}", method = RequestMethod.GET)
+	@GetMapping("/qdelete/{id}")
 	public ModelAndView qdelete(@PathVariable Integer id) {
 		Usuario usuario = usuarioService.get(id);
 		if (usuario.isNovo()) {
@@ -131,12 +128,12 @@ public class ControleUsuarios {
 		return lista();
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@GetMapping("/{id}")
 	public ModelAndView usuario(@PathVariable Integer id) {
 		return novo(usuarioService.get(id));
 	}
 
-	@RequestMapping(value = "/existe/{login}", method = RequestMethod.GET)
+	@GetMapping("/existe/{login}")
 	public @ResponseBody String LoginExiste(@PathVariable String login) {
 		if (usuarioService.existeForLogin(login)) {
 			return "ok";

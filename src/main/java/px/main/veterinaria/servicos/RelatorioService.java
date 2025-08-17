@@ -74,7 +74,7 @@ public class RelatorioService {
 		linhas.add(new Linha("Crédito", "Lucro", totais));
 		totais = new ArrayList<BigDecimal>();
 		for (int i = 0; i < 12; i++) {
-			totais.add(linhas.get(1).getValores().get(i).subtract(linhas.get(0).getValores().get(i)));
+			totais.add(linhas.get(1).getValores().get(i).subtract(linhas.getFirst().getValores().get(i)));
 		}
 		totais.add(totais.stream().reduce(BigDecimal.ZERO, BigDecimal::add));
 		linhas.add(new Linha("Saldo", "Lucro", totais));

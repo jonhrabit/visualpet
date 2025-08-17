@@ -8,6 +8,5 @@ import px.main.veterinaria.modelos.ClienteInformacao;
 @Repository
 public interface ClienteInformacaoRepository extends JpaRepository<ClienteInformacao, Integer> {
 	public ClienteInformacao findById(int id);
-	
-	public void deleteByCliente(Integer clienteId);
+	public ClienteInformacao findByClienteId(int clienteId);
 }

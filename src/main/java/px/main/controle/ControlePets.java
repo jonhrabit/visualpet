@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,7 +60,7 @@ public class ControlePets {
 		return model;
 	}
 
-	@RequestMapping(value = "/consulta", method = RequestMethod.POST)
+	@PostMapping("/consulta")
 	public ModelAndView consulta(Pet pet, BindingResult result, RedirectAttributes attributes) {
 		ModelAndView model = new ModelAndView("pet/lista");
 		model.addObject("pet", pet);
@@ -90,7 +88,7 @@ public class ControlePets {
 		return model;
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@GetMapping("/{id}")
 	public ModelAndView pet(@PathVariable Integer id) {
 		Pet pet = petSVC.get(id);
 		return novo(pet);
@@ -101,7 +99,7 @@ public class ControlePets {
 		return novo(pet, mensagem);
 	}
 
-	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	@GetMapping("/delete/{id}")
 	public ModelAndView delete(@PathVariable Integer id) {
 		if (petSVC.delete(id)) {
 			return lista("Pet excluído com exito.");
@@ -111,8 +109,8 @@ public class ControlePets {
 		}
 	}
 
-	@RequestMapping(value = "/salvar", method = RequestMethod.POST)
-	public ModelAndView salvar(@Valid Pet pet, BindingResult result, RedirectAttributes attributes) {
+	@PostMapping("/salvar")
+	public ModelAndView salvar(Pet pet, BindingResult result, RedirectAttributes attributes) {
 		if ((pet.getNome() == "") || (pet.getNome() == null)) {
 			return novo(pet, "Informe pelo menos o nome do pet, não esquesa de selecionar o Tutor correto.");
 		}
@@ -131,7 +129,7 @@ public class ControlePets {
 		return model;
 	}
 
-	@RequestMapping(value = "/anotacao", method = RequestMethod.POST)
+	@PostMapping("/anotacao")
 	public ModelAndView anotacao(PetInformacao petInformacao, RedirectAttributes attributes) {
 		petSVC.anotar(petInformacao.getId(), petInformacao.getTipo(), petInformacao.getTexto(), 0);
 		ModelAndView model = new ModelAndView("redirect:/pet/" + petInformacao.getId());
@@ -139,7 +137,7 @@ public class ControlePets {
 		return model;
 	}
 
-	@RequestMapping(value = "/vacina/salvar", method = RequestMethod.GET)
+	@GetMapping("/vacina/salvar")
 	public ResponseEntity<?> salvarVacina(@DateTimeFormat(pattern = "yyyy-MM-dd") Date dia, String vacina,
 			@DateTimeFormat(pattern = "yyyy-MM-dd") Date vigencia, Integer petId) {
 		if ((vacina == "") || (vigencia == null) || (dia == null)) {
@@ -149,25 +147,25 @@ public class ControlePets {
 		return ResponseEntity.ok(petSVC.buscarByPetId(petId));
 	}
 
-	@RequestMapping(value = "/vacina/{data}", method = RequestMethod.GET)
+	@GetMapping("/vacina/{data}")
 	public ModelAndView salvarVacina(@PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date data) {
 		ModelAndView model = new ModelAndView("pet/vacinavencida");
 		model.addObject("lista", vacinaRepository.vencidas(data));
 		return model;
 	}
 
-	@RequestMapping(value = "/vacina/excluir/{petId}/{vacinaId}", method = RequestMethod.GET)
+	@GetMapping("/vacina/excluir/{petId}/{vacinaId}")
 	public @ResponseBody List<Vacina> excluirVacina(@PathVariable Integer petId, @PathVariable Integer vacinaId) {
 		petSVC.deleteVacina(petId, vacinaId);
 		return petSVC.buscarByPetId(petId);
 	}
 
-	@RequestMapping(value = "/vacina/renovar", method = RequestMethod.GET)
+	@GetMapping("/vacina/renovar")
 	public @ResponseBody boolean renovarVacina(Integer id, Integer petId) {
 		return petSVC.renovarVacina(id, petId);
 	}
 
-	@RequestMapping(value = "/consulta", method = RequestMethod.GET)
+	@GetMapping("/consulta")
 	public ResponseEntity<?> searchPetLike(String nome) {
 		List<Pet> lista = petSVC.buscarByNomeLike(nome);
 		if (lista.size() > 0) {
@@ -177,7 +175,7 @@ public class ControlePets {
 		}
 	}
 
-	@RequestMapping(value = "/consulta_id", method = RequestMethod.GET)
+	@GetMapping("/consulta_id")
 	public ResponseEntity<?> searchTutorCelular(Integer idTutor) {
 		List<Pet> lista = petSVC.buscarByTutorId(idTutor);
 		if (lista.size() > 0) {
@@ -187,8 +185,8 @@ public class ControlePets {
 		}
 	}
 
-	@RequestMapping(value = "/upfoto", method = RequestMethod.POST)
-	public ModelAndView doUpload(@RequestParam("id") Integer id, @RequestParam("file") MultipartFile multipartFile) {
+	@PostMapping("/upfoto")
+	public ModelAndView doUpload(@RequestParam Integer id, @RequestParam("file") MultipartFile multipartFile) {
 
 		File dir = new File(pathFotos + File.separator + id + File.separator + multipartFile.getOriginalFilename());
 

@@ -3,19 +3,19 @@ package px.main.controle;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.validation.Valid;
 import px.main.veterinaria.modelos.Estoque;
 import px.main.veterinaria.modelos.Produto;
 import px.main.veterinaria.servicos.CestaService;
@@ -61,13 +61,13 @@ public class ControleProdutos {
 		return model;
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@GetMapping("/{id}")
 	public ModelAndView produto(@PathVariable Integer id) {
 		Produto prod = produtoService.get(id);
 		return novo(prod);
 	}
 
-	@RequestMapping(value = "/deletar/{id}", method = RequestMethod.GET)
+	@GetMapping("/deletar/{id}")
 	public @ResponseBody boolean deletar(@PathVariable Integer id) {
 		return produtoService.deletar(id);
 	}
@@ -78,7 +78,7 @@ public class ControleProdutos {
 		return "Produto excluído com sucesso.";
 	}
 
-	@RequestMapping(value = "/salvar", method = RequestMethod.POST)
+	@PostMapping("/salvar")
 	public ModelAndView salvar(@Valid Produto produto, BindingResult result, RedirectAttributes attributes) {
 		if (result.hasErrors()) {
 			return novo(produto);

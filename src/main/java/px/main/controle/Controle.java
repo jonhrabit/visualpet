@@ -7,23 +7,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.info.BuildProperties;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import jakarta.servlet.http.HttpServletRequest;
 import px.main.seguranca.modelos.Regras;
 import px.main.seguranca.modelos.Usuario;
 import px.main.seguranca.modelos.UsuarioRegra;
@@ -40,12 +36,15 @@ public class Controle {
 
 	@Autowired
 	UsuarioRepository usuarioRepository;
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 	@Value("${fotos.path}")
 	private String pathFotos;
-	@Autowired
-	BuildProperties buildProperties;
+
+	@Value("${application-artifactId}")
+	private String artefato;
+
+	@Value("${application-version}")
+	private String versao;
 
 	@RequestMapping("/about")
 	public ModelAndView about() {
@@ -53,12 +52,12 @@ public class Controle {
 		if (criarADM()) {
 			model = new ModelAndView("adm");
 		}
-		model.addObject("software", buildProperties.getArtifact());
-		model.addObject("versao", buildProperties.getVersion());
+		model.addObject("software", artefato);
+		model.addObject("versao", versao);
 		return model;
 	}
 
-	@RequestMapping(value = "/csrf-token", method = RequestMethod.GET)
+	@GetMapping("/csrf-token")
 	public @ResponseBody String getCsrfToken(HttpServletRequest request) {
 		CsrfToken token = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
 		return token.getToken();
@@ -73,6 +72,7 @@ public class Controle {
 	public String goLogin() {
 		return "login";
 	}
+
 	@RequestMapping("")
 	public String index() {
 		return goLogin();
@@ -98,15 +98,10 @@ public class Controle {
 		return "404";
 	}
 
-	@RequestMapping("/chat")
-	public String chat() {
-		return "chat/form_chat";
-	}
-
 	public boolean criarADM() {
 
 		if (usuarioRepository.findAll().size() == 0) {
-			Usuario usuario = new Usuario(0, "adm", "Administrador", bCryptPasswordEncoder.encode("adm"), "", "", true,
+			Usuario usuario = new Usuario(0, "adm", "Administrador","$2a$12$KcbYIAFSeu02RN7Hm2hHKuy/r3RL6XLXf.PBXJptOk1MVYHqcB/HO", "", "", true,
 					new ArrayList<UsuarioRegra>());
 			for (Regras regra : Regras.values()) {
 				usuario.getRegras().add(new UsuarioRegra(0, usuario, regra.name()));
@@ -117,23 +112,12 @@ public class Controle {
 		return false;
 	}
 
-	public static String usuarioAtivo() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String nome;
-		if (principal instanceof UserDetails) {
-			nome = ((UserDetails) principal).getUsername();
-		} else {
-			nome = principal.toString();
-		}
-		return nome;
-	}
-
 	@RequestMapping("/processamentos")
 	public String processamento() {
 		return "relatorio/geral";
 	}
 
-	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	@PostMapping("/upload")
 	public @ResponseBody List<Extrato> comparar(@RequestParam("file") MultipartFile multipartFile) {
 		String path = pathFotos + File.separator + multipartFile.getOriginalFilename();
 		File dir = new File(path);
@@ -145,7 +129,7 @@ public class Controle {
 		try {
 			List<Extrato> listaExtrato = ImportarArquivo.importarExtratos(new FileReader(path));
 			return caixaService.compararListas(listaExtrato);
-			
+
 		} catch (FileNotFoundException e) {
 			return null;
 		}

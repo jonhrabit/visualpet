@@ -4,9 +4,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
@@ -31,7 +28,6 @@ public class PacoteView {
 	@ToString
 	private class AtendimentoView {
 		@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-		@Temporal(TemporalType.TIMESTAMP)
 		private Date agenda;
 		private Integer servico, pet;
 	}

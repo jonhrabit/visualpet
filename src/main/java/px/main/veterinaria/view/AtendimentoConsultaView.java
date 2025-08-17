@@ -5,9 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
@@ -19,11 +16,9 @@ import px.main.veterinaria.modelos.enumeracoes.SituacaoAtendimento;
 @Data
 public class AtendimentoConsultaView {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date inicio;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date fim;
 	private Servico servico;
 	private SituacaoAtendimento situacao;

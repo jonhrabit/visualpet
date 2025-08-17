@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import px.main.veterinaria.modelos.Cliente;
 import px.main.veterinaria.modelos.Pet;
@@ -29,9 +27,4 @@ public interface PetRepository extends JpaRepository<Pet, Integer> {
 
 	@Query("Select c.tutor from Pet c where c.nome like %?1% order by c.nome")
 	public List<Cliente> findTutorByNomePet(String nome);
-
-	@Transactional
-	@Modifying
-	public void deleteById(Integer id);
-
 }

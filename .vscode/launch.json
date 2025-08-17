@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-VisualPetApplication<VisualPet>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "px.main.VisualPetApplication",
+            "projectName": "VisualPet",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

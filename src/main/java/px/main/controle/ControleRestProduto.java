@@ -36,7 +36,7 @@ public class ControleRestProduto {
 	@GetMapping("/produtos/{id}")
 	Produto one(@PathVariable int id) {
 		Optional<Produto> produto = produtoRepository.findById(id);
-		if (!produto.isEmpty()) {
+		if (produto.isPresent()) {
 			return produto.get();
 		}
 		return new Produto();
@@ -45,7 +45,7 @@ public class ControleRestProduto {
 	@PutMapping("/produtos/{id}")
 	Produto replaceProduto(@RequestBody Produto newProduto, @PathVariable Integer id) {
 		Optional<Produto> produtoOp=produtoRepository.findById(id);
-		if(!produtoOp.isEmpty()) {
+		if(produtoOp.isPresent()) {
 			Produto produto=produtoOp.get();
 			produto.setCodigo(newProduto.getCodigo());
 			produto.setDescricao(newProduto.getDescricao());
@@ -69,7 +69,7 @@ public class ControleRestProduto {
 	public List<Produto> replaceProdutos(@RequestBody List<Produto> listaProdutos) {
 		for(Produto newProduto:listaProdutos) {
 		Optional<Produto> produtoOp=produtoRepository.findById(newProduto.getId());
-		if(!produtoOp.isEmpty()) {
+		if(produtoOp.isPresent()) {
 			Produto produto=produtoOp.get();
 			produto.setCodigo(newProduto.getCodigo());
 			produto.setDescricao(newProduto.getDescricao());
