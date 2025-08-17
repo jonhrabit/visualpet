@@ -313,7 +313,6 @@
 
 
 		var infos = /* [[${pet.informacoes}]] */[];
-		console.log(infos);
 		var tableInfo =  $("#tableInfos")
 		.DataTable(
 			{
@@ -450,8 +449,6 @@
 		function saveMedia(nome,valor){
 			var csrfHeader =nome;
 			var csrfToken  =valor;
-			console.log(csrfToken);
-			console.log(csrfHeader);
           	$.ajax({
                 url : '/pet/uploadfoto?_csrf='+valor,
                 data : {
@@ -482,7 +479,6 @@
                 	atualizar(dados);
                 },
                 error : function(err) {
-                    console.log(err);
                     alert("Erro durante o registro da vacina.");
                 }
             }); 

@@ -81,7 +81,6 @@
 		    contentType : false, // desabilitar o cabeçalho "Content-Type"
 		    cache : false, // desabilitar o "cache"
 		    success : function(data) {
-			console.log(data);
 			$("#dialogo").modal("hide");
 			criar_tabela_extrato(data, "#resultado")
 			$("#btnSubmit").prop("disabled", false);
@@ -89,7 +88,6 @@
 		    error : function(e) {
 
 			$("#dialogo").modal("hide");
-			console.log(e);
 			$("#btnSubmit").prop("disabled", false);
 		    }
 		});
@@ -99,7 +97,6 @@
 	    $.ajax({
 		url : "/consultas/caixasemcodigo",
 		success : function(result) {
-		    console.log(result);
 		    criar_tabela_caixa(result, "#resultado");
 		}
 	    });

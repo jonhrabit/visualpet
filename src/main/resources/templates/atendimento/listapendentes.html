@@ -66,11 +66,9 @@ a {
 
 	<script th:inline="javascript">
 	var lista= /* [[${lista}]] */[];
-	console.log(lista);
 	$("#count").text(lista.length);
 	var total=0;
 	for(var i=0;i<lista.length;i++){
-		console.log(lista[i].valor);
 		total=total+lista[i].valor;
 	}
 

@@ -295,8 +295,7 @@
 	<div th:replace="~{fragmentos/js}"></div>
 
 	<script th:inline="javascript">
-		var relatorio =[[${relatorio}]];
-		console.log(relatorio);
+		var relatorio =/* [[${relatorio}]] */[];
 		imprimir();
 		
 		function imprimir(){
@@ -360,7 +359,6 @@
 				hl++;
 				limite++;
 		    }
-		    console.log("limite: "+ limite);
 		    for(let i=0;i<limite;i++){
 				total = total+relatorio.linhas[relatorio_linha+i].valores[coluna];
 		    }

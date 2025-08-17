@@ -1,4 +1,3 @@
-console.log("lucro js ON.")
 
 class Mes{
     constructor(mes){
@@ -22,12 +21,10 @@ function lucro() {
 		.ajax({
 		    url : "/caixa/consulta/" + ano,
 		    success : function(result) {
-			console.log(result);
 			let periodo = [];
 			for(let z = 0;z<12;z++){
 			    periodo.push(new Mes(z));
 			}
-			console.log(periodo);
 			for (let i = 0; i < result.length; i++) {
 			    let d = new Date(result[i].data);
 			    d= d.getMonth();
@@ -128,7 +125,6 @@ function DATA(data) {
     return dataFormatada;
 }
 function dialogo_loading() {
-    console.log($("#dialogo").length);
     if ($("#dialogo").length) {
 	$("#dialogo").modal("dispose");
     } else {

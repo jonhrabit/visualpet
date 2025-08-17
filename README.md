@@ -1,25 +1,78 @@
+
 # VisualPet
 
-Projeto para gerenciamento de agenta e venda de produtos para petShops.
+> Sistema completo para gestão de pet shops: controle de atendimentos, vendas, estoque, clientes, pets, produtos, caixa, relatórios e muito mais.
 
-### 📋 Pré-requisitos
+## � Principais Funcionalidades
 
-1. Java 11 (spring-boot 2.2.4)
-2. Maven 
-3. Um serviço de banco de dados para persistência. 
+- Cadastro e gerenciamento de clientes, pets, produtos e serviços
+- Controle de atendimentos, prontuários e vacinas
+- Gestão de vendas, caixa, pacotes e estoque
+- Relatórios gerenciais e dashboards
+- Controle de usuários e permissões (Spring Security)
+- Interface web responsiva (Thymeleaf)
 
-### 🔧 Instalação
+## 🆕 Novidades na versão 3.0
 
-Primeiro compila-se o projeto em um JAR utilizando o Maven depois em um diretório de sua preferência para inicar o serviço aninha-se o jar e cria-se a pasta .config com o application.properties para acesso ao banco de dados, no desenvolvimento foi utilizado "mysql".
-Depois de configurado basta abrir o terminal no diretório escolhido e ridar i comando "java -jar _______.jar".
-Logs de inicialização irão demonstrar se a aplicação subiu corretamente.
+- Atualização para Java 22 e Spring Boot 3.5.4
+- Novos relatórios e gráficos
+- Melhorias de performance e segurança
+- Novos módulos e telas (produtos, caixa, relatórios)
+- Código reorganizado e modularizado
 
+## 📋 Pré-requisitos
 
-## 🛠️ Construído com
+- Java 22+
+- Maven 3+
+- MySQL 8+ (ou compatível)
 
-* [Maven](https://maven.apache.org/) - Gerente de Dependência
-* [Eclipse]
-* [VsCode]
+## 🔧 Instalação e Execução
 
-## 📌 Versão 2.1.7
-## ✒️ Autor João Felipe Xavier
+1. Clone o repositório:
+	```bash
+	git clone https://github.com/jonhrabit/visualpet.git
+	cd visualpet
+	```
+2. Configure o banco de dados MySQL e ajuste o arquivo `src/main/resources/application.properties` conforme necessário.
+3. Compile o projeto:
+	```bash
+	mvn clean package
+	```
+4. Execute o JAR gerado:
+	```bash
+	java -jar target/VisualPet-3.0-exec.jar
+	```
+5. Acesse a aplicação em [http://localhost:8080](http://localhost:8080)
+
+## ⚙️ Configuração
+
+Edite o arquivo `application.properties` para definir as credenciais do banco, porta, e demais parâmetros:
+
+```
+spring.datasource.url=jdbc:mysql://localhost:3306/veterinaria
+spring.datasource.username=SEU_USUARIO
+spring.datasource.password=SUA_SENHA
+```
+
+## 🛠️ Tecnologias Utilizadas
+
+- Java 22
+- Spring Boot 3.5.4 (Web, Data JPA, Security, Validation, DevTools)
+- Thymeleaf
+- MySQL
+- Lombok
+- WebJars (DataTables, Moment.js)
+
+## � Estrutura do Projeto
+
+- `src/main/java/px/main/` — Código-fonte principal (controllers, services, models)
+- `src/main/resources/templates/` — Templates HTML (Thymeleaf)
+- `src/main/resources/static/` — Arquivos estáticos (CSS, JS, imagens)
+- `src/main/resources/application.properties` — Configurações da aplicação
+
+## 👤 Autor
+
+João Felipe Xavier
+
+---
+Projeto open source. Contribuições são bem-vindas!

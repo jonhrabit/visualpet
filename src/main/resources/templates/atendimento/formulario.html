@@ -81,7 +81,7 @@
                     id="dataPet"
                     placeholder="Pet"
                     autocomplete="off"
-                    th:value="${atendimento.pet != null ? atendimento.pet.nome + ' ' + atendimento.pet.tutor.nome: ''}"
+                    th:value="*{pet.id != 0 ? pet.nome + ' ' + pet.tutor.nome: ''}"
                   />
                   <input type="hidden" th:field="*{pet}" id="petId" />
                   <datalist id="datalistOptions">

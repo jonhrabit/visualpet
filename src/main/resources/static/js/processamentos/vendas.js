@@ -26,7 +26,6 @@ function vendas_mes() {
 		    $("#resultado").html("");
 		    $("#resultado").append(
 			    "<h3>Vendas de " + mes + "/" + ano + "</h3>");
-		    console.log(result);
 		    var div = $("<div class='m-4'></div>");
 		    let table = $("<table id='tabela'></table>");
 		    div.append(table);
@@ -101,8 +100,6 @@ function vendas_mes_grafico() {
 	    .ajax({
 		url : "/consultas/vendas/" + mes + "/" + ano,
 		success : function(result) {
-		    console.log("---------CONSULTAS/VENDAS/-----------");
-		    console.log(result);
 		    $("#resultado").html("");
 		    $("#resultado")
 			    .append(

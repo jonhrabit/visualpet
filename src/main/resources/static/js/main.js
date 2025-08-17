@@ -1,5 +1,8 @@
 'use strict';
 
+if (sessionStorage.getItem("compras") == null) {
+	sessionStorage.setItem("compras", 0);
+}
 compras(sessionStorage.getItem("compras"));
 
 function compras(quant) {

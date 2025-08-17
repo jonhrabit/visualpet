@@ -61,7 +61,6 @@ function atendimentos_por_cliente_grafico() {
 				url : "/consultas/atendimentosporcliente/" + mes + "/" + ano,
 				success : function(result) {
 					$("#resultado").html("");
-					console.log(result);
 					$("#resultado")
 							.append(
 									$("<div id='chart' class='m-2 border border-dark'></div>"));
