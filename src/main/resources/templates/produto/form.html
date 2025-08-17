@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
 <meta name="_csrf" th:content="${_csrf.token}"></meta>
 
-<link th:replace="fragmentos/css"></link>
+<link th:replace="~{fragmentos/css}"></link>
 
 <title>Produtos</title>
 <link rel="icon" href="/images/icon.png" />
 </head>
 <body>
 
-	<div th:replace="fragmentos/menu"></div>
+	<div th:replace="~{fragmentos/menu}"></div>
 	<div class="container">
 
 		<ul class="nav nav-tabs">
@@ -292,7 +292,7 @@
 	</script>
 
 
-	<div th:replace="fragmentos/js"></div>
+	<div th:replace="~{fragmentos/js}"></div>
 	<script type="text/javascript">
 	if(prod.estoque.length>0){
     var table = $("#table-estoque").DataTable(

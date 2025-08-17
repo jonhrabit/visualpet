@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +25,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import px.main.seguranca.servicos.UsuarioLogado;
 import px.main.veterinaria.modelos.Estoque;
 import px.main.veterinaria.modelos.Produto;
 import px.main.veterinaria.servicos.EstoqueService;
@@ -45,7 +45,7 @@ public class ControleEstoque {
 		if (optional.isEmpty())
 			return "Estoque não localizado.";
 		Estoque estoque = optional.get();
-		newEstoque.setUsuario(Controle.usuarioAtivo());
+		newEstoque.setUsuario(UsuarioLogado.get());
 		newEstoque.setRegistro(new Date());
 		estoque.put(newEstoque);
 		estoqueService.salvar(estoque);
@@ -54,7 +54,7 @@ public class ControleEstoque {
 
 	@PostMapping
 	public @ResponseBody String post(Estoque newEstoque) {
-		newEstoque.setUsuario(Controle.usuarioAtivo());
+		newEstoque.setUsuario(UsuarioLogado.get());
 		newEstoque.setRegistro(new Date());
 		estoqueService.salvar(newEstoque);
 		return "Operações realizadas com exito.";
@@ -79,7 +79,7 @@ public class ControleEstoque {
 		return estoqueService.all();
 	}
 
-	@RequestMapping(value = "/import", method = RequestMethod.POST)
+	@PostMapping("/import")
 	public @ResponseBody String doUpload(@RequestParam("file") MultipartFile multipartFile)
 			throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -100,7 +100,7 @@ public class ControleEstoque {
 				estoqueService.salvar(new Estoque(0,
 						prod.getFracao() * Integer.parseInt(lista.item(i).getChildNodes().item(6).getTextContent()),
 						new BigDecimal(lista.item(i).getChildNodes().item(7).getTextContent()), "Lote",
-						Controle.usuarioAtivo(), null, new Date(), prod));
+						UsuarioLogado.get(), null, new Date(), prod));
 
 				relatorio = relatorio + "<div>" + i + "<div/>";
 				relatorio = relatorio + "<div>Nome: " + lista.item(i).getChildNodes().item(2).getTextContent()

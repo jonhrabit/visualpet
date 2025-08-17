@@ -11,9 +11,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fincatto.documentofiscal.nfe400.classes.NFProtocolo;
-import com.fincatto.documentofiscal.nfe400.classes.lote.consulta.NFLoteConsultaRetorno;
-
 import px.main.veterinaria.modelos.Atendimento;
 import px.main.veterinaria.modelos.Caixa;
 import px.main.veterinaria.modelos.Cesta;
@@ -163,15 +160,6 @@ public class CestaService {
 		fim.set(Calendar.SECOND, 59);
 		return cestaRepository.findByDataBetween(inicio.getTime(), fim.getTime()).stream()
 				.filter(x -> x.getNf() == null).collect(Collectors.toList());
-	}
-
-	public NFProtocolo protocolo(String identificador, NFLoteConsultaRetorno lote) {
-		for (NFProtocolo protocolo : lote.getProtocolos()) {
-			if (protocolo.getProtocoloInfo().getIdentificador().equals(identificador)) {
-				return protocolo;
-			}
-		}
-		return null;
 	}
 
 	public void setNota(int i, String chaveAcesso) {

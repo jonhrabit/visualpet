@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import px.main.controle.Controle;
+import px.main.seguranca.servicos.UsuarioLogado;
 import px.main.veterinaria.modelos.Pet;
 import px.main.veterinaria.modelos.Prontuario;
 import px.main.veterinaria.repository.ProntuarioRepository;
@@ -22,7 +22,7 @@ public class ProntuarioService {
 
 	public Prontuario get(Integer id) {
 		Optional<Prontuario> prontuario = prontuarioRepository.findById(id);
-		if (!prontuario.isEmpty())
+		if (prontuario.isPresent())
 			return prontuario.get();
 		return null;
 	}
@@ -36,7 +36,7 @@ public class ProntuarioService {
 		prontuario = prontuarioRepository.save(prontuario);
 		if (novo)
 			petService.anotar(prontuario.getPet().getId(), "Prontuário",
-					"Prontuário cadastrado pelo usuário " + Controle.usuarioAtivo() + " ID:" + prontuario.getId(),
+					"Prontuário cadastrado pelo usuário " + UsuarioLogado.get() + " ID:" + prontuario.getId(),
 					prontuario.getId());
 		return prontuario;
 	}

@@ -15,19 +15,16 @@ public class ResourceConfig implements WebMvcConfigurer {
 
 	@Value("${fotos.path}")
 	private String pathFotos;
-	@Value("${nfe.path}")
-	private String pathNFE;
 
 	private static final String[] CLASSPATH_RESOURCE_LOCATIONS = { "classpath:/META-INF/resources/",
 			"classpath:/resources/", "classpath:/static/", "classpath:/public/" };
 
+			@SuppressWarnings("null")
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
 
 		registry.addResourceHandler("/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
 		registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/").resourceChain(false);
 		registry.addResourceHandler("/fotos/**").addResourceLocations("file:///" + pathFotos + File.separator)
-				.setCachePeriod(3600).resourceChain(true).addResolver(new PathResourceResolver());
-		registry.addResourceHandler("/xml/**").addResourceLocations("file:///" + pathNFE + File.separator)
 				.setCachePeriod(3600).resourceChain(true).addResolver(new PathResourceResolver());
 	}
 }

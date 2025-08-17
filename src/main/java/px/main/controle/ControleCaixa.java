@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import px.main.veterinaria.modelos.Caixa;
@@ -33,7 +30,7 @@ public class ControleCaixa {
 		return consulta(new CaixaView());
 	}
 
-	@RequestMapping(value = "/consulta", method = RequestMethod.GET)
+	@GetMapping("/consulta")
 	public ModelAndView consulta(CaixaView caixaView) {
 		ModelAndView model = new ModelAndView("caixa/lista");
 		caixaService.preencher(caixaView);
@@ -42,7 +39,7 @@ public class ControleCaixa {
 		return model;
 	}
 
-	@RequestMapping(value = "/consulta/{ano}", method = RequestMethod.GET)
+	@GetMapping("/consulta/{ano}")
 	public @ResponseBody List<Caixa> consulta(@PathVariable Integer ano) {
 		return caixaService.busca(ano);
 	}
@@ -56,7 +53,7 @@ public class ControleCaixa {
 		return model;
 	}
 
-	@RequestMapping(value = "/fechamento/{data}", method = RequestMethod.GET)
+	@GetMapping("/fechamento/{data}")
 	public ModelAndView fechamento(@PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy") Date data) {
 		ModelAndView model = new ModelAndView("caixa/fechamento");
 		model.addObject("lista", caixaService.fechamento(data));
@@ -64,25 +61,25 @@ public class ControleCaixa {
 		return model;
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@GetMapping("/{id}")
 	public ModelAndView atendimento(@PathVariable Integer id) {
 		return novo(caixaService.get(id));
 	}
 
-	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+	@GetMapping("/delete/{id}")
 	public ModelAndView delete(@PathVariable Integer id) {
 		caixaService.deletar(id);
 		return consulta(new CaixaView(), "Registro de caixa excluído com sucesso.");
 	}
 
-	@RequestMapping(value = "/taxas", method = RequestMethod.GET)
+	@GetMapping("/taxas")
 	public ModelAndView taxas() {
 		ModelAndView model = new ModelAndView("caixa/taxas");
 		model.addObject("listaTaxas", caixaService.listaTaxas());
 		return model;
 	}
 
-	@RequestMapping(value = "/imprimir", method = RequestMethod.GET)
+	@GetMapping("/imprimir")
 	public ModelAndView imprimir(CaixaView caixaView) {
 		ModelAndView model = new ModelAndView("caixa/impressaolista");
 		caixaService.preencher(caixaView);
@@ -106,7 +103,7 @@ public class ControleCaixa {
 		return model;
 	}
 
-	@RequestMapping(value = "/salvar", method = RequestMethod.POST)
+	@PostMapping("/salvar")
 	public ModelAndView salvar(Caixa caixa) {
 		if ((caixa.getValor() == null) || (caixa.getTexto().isBlank())) {
 			return novo(caixa, "Os campos valor e texto devem estar preenchidos");
@@ -133,10 +130,10 @@ public class ControleCaixa {
 		System.out.println(i + " registros alterados.");
 		return i + " registros alterados.";
 	}
-	@RequestMapping(value="/feriados", method = RequestMethod.GET)
+
+	@GetMapping("/feriados")
 	public @ResponseBody ResponseEntity<List<LocalDate>> feriados() {
-		FeriadosService feriados = new FeriadosService();
-		return ResponseEntity.ok().body(feriados.getDatas());
+		return ResponseEntity.ok().body(FeriadosService.getDatas());
 	}
 
 }

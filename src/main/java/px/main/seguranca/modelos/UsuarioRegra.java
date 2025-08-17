@@ -1,27 +1,26 @@
 package px.main.seguranca.modelos;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "usuarios_regras")
 public class UsuarioRegra {
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
-	@ManyToOne(fetch=FetchType.EAGER)
+
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
-	
+
 	private String regra;
 
 	public UsuarioRegra(Integer id, Usuario usuario, String regra) {
@@ -29,13 +28,16 @@ public class UsuarioRegra {
 		this.usuario = usuario;
 		this.regra = regra;
 	}
+
 	public UsuarioRegra(String regra, Usuario usuario) {
 		this.usuario = usuario;
 		this.regra = regra;
 	}
+
 	public UsuarioRegra() {
 		this.usuario = new Usuario();
 	}
+
 	public UsuarioRegra(String regra) {
 		this.usuario = new Usuario();
 		this.regra = regra;
@@ -44,28 +46,36 @@ public class UsuarioRegra {
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public Usuario getUsuario() {
 		return usuario;
 	}
+
 	public Integer getUsuarioId() {
 		return usuario.getId();
 	}
+
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
+
 	public String getRegra() {
 		return regra;
 	}
+
 	public void setRegra(String regra) {
 		this.regra = regra;
 	}
+
 	@Override
 	public String toString() {
 		return "UsuarioRegra [id=" + id + ", regra=" + regra + "]";
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -75,6 +85,7 @@ public class UsuarioRegra {
 		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -101,7 +112,5 @@ public class UsuarioRegra {
 			return false;
 		return true;
 	}
-	
-	
 
 }

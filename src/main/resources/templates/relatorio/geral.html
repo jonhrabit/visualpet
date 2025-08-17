@@ -8,7 +8,7 @@
 <meta name="_csrf" th:content="${_csrf.token}" />
 <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 
-<link th:replace="fragmentos/css"></link>
+<link th:replace="~{fragmentos/css}"></link>
 
 <script src="/js/processamentos/atendimentos_por_servico.js"></script>
 <script src="/js/processamentos/atendimentos_por_cliente.js"></script>
@@ -22,7 +22,7 @@
 </head>
 <body>
 
-	<div th:replace="fragmentos/menu"></div>
+	<div th:replace="~{fragmentos/menu}"></div>
 	<div class="row">
 		<div class="col-3 bg-warning d-print-none">
 			<ul class="list-group">
@@ -56,7 +56,7 @@
 		</div>
 	</div>
 
-	<div th:replace="fragmentos/js"></div>
+	<div th:replace="~{fragmentos/js}"></div>
 
 	<script type="text/javascript"
 		src="https://www.gstatic.com/charts/loader.js"></script>

@@ -7,14 +7,14 @@
 <meta name="_csrf_header" th:content="${_csrf.headerName}" />
 <!-- ... -->
 
-<link th:replace="fragmentos/css"></link>
+<link th:replace="~{fragmentos/css}"></link>
 
 <title>Pacote</title>
 
 </head>
 
 <body>
-	<div th:replace="fragmentos/menu"></div>
+	<div th:replace="~{fragmentos/menu}"></div>
 	<div class="container">
 		<h3>Teste</h3>
 		<label>Data: </label> <input type='datetime-local'
@@ -22,7 +22,7 @@
 			<div><a class="mt-4 btn btn-warning" onclick="post()">Gravar</a></div>
 
 	</div>
-	<div th:replace="fragmentos/js"></div>
+	<div th:replace="~{fragmentos/js}"></div>
 
 	<script type="text/javascript">
 	function post() {

@@ -6,7 +6,7 @@
 <meta name="_csrf" th:content="${_csrf.token}"></meta>
 <!-- ... -->
 
-<link th:replace="fragmentos/css"></link>
+<link th:replace="~{fragmentos/css}"></link>
 
 <title>Estoque</title>
 
@@ -14,7 +14,7 @@
 
 </head>
 <body>
-	<div th:replace="fragmentos/menu"></div>
+	<div th:replace="~{fragmentos/menu}"></div>
 
 	<div class="m-3">
 		<div>
@@ -57,7 +57,7 @@
 	</div>
 	<div id="lista"></div>
 
-	<div th:replace="fragmentos/js"></div>
+	<div th:replace="~{fragmentos/js}"></div>
 	<script th:inline="javascript">
 	var lista = [[${lista}]];
 	console.log(lista);

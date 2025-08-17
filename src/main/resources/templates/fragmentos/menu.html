@@ -1,7 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
-
+	lang="pt-BR">
 <head>
 <meta charset="utf-8"></meta>
 <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
@@ -14,7 +13,7 @@
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-warning">
 		<a class="navbar-brand" th:href="@{/atendimento/lista}"
-			sec:authorize="hasRole('ROLE_ATENDIMENTO')">VisualPet</a>
+			sec:authorize="hasRole('ATENDIMENTO')">VisualPet</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarSupportedContent"
 			aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -34,53 +33,45 @@
 					<div class='badge badge-dark' id="countProdutos"></div> </a>
 
 
-				<li class="nav-item dropdown bg-warning"><a
-					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-					role="button" data-toggle="dropdown" aria-haspopup="true"
-					aria-expanded="false"> Cadastro</a>
-					<div class="dropdown-menu bg-warning"
-						aria-labelledby="navbarDropdown">
-						<a class="dropdown-item bg-warning" href="#"
-							th:href="@{/atendimento}"
-							sec:authorize="hasRole('ROLE_ATENDIMENTO')">Atendimento</a> <a
-							class="dropdown-item bg-warning" href="#" th:href="@{/pet}"
-							sec:authorize="hasRole('ROLE_PET')">Pet</a> <a
-							class="dropdown-item bg-warning" href="#" th:href="@{/cliente}"
-							sec:authorize="hasRole('ROLE_CLIENTE')">Tutor</a> <a
-							class="dropdown-item bg-warning" href="#"
-							th:href="@{/prontuario/}"
-							sec:authorize="hasRole('ROLE_VETERINARIA')">Prontuário</a> <a
-							class="dropdown-item bg-warning" href="#" th:href="@{/caixa/}"
-							sec:authorize="hasRole('ROLE_CAIXA')">Caixa</a> <a
-							class="dropdown-item bg-warning" href="#" th:href="@{/produto/}"
-							sec:authorize="hasRole('ROLE_PRODUTO')">Produto</a> <a
-							class="dropdown-item bg-warning" href="#" th:href="@{/pacote/}"
-							sec:authorize="hasRole('ROLE_CAIXA')">Pacote</a>
-					</div></li>
+				<li class="nav-item dropdown bg-warning">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Cadastro</a>
+					<div class="dropdown-menu bg-warning" aria-labelledby="navbarDropdown">
 
-				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-					role="button" data-toggle="dropdown" aria-haspopup="true"
-					aria-expanded="false"> Listas</a>
+						<a class="dropdown-item bg-warning" href="#"
+							th:href="@{/atendimento}" sec:authorize="hasRole('ATENDIMENTO')">Atendimento</a>
+						<a class="dropdown-item bg-warning" href="#" th:href="@{/pet}"
+							sec:authorize="hasRole('PET')">Pet</a>
+						<a class="dropdown-item bg-warning" href="#" th:href="@{/cliente}"
+							sec:authorize="hasRole('CLIENTE')">Tutor</a>
+						<a class="dropdown-item bg-warning" href="#"
+							th:href="@{/prontuario}" sec:authorize="hasRole('VETERINARIA')">Prontuário</a>
+						<a class="dropdown-item bg-warning" href="#" th:href="@{/caixa}"
+							sec:authorize="hasRole('CAIXA')">Caixa</a>
+						<a class="dropdown-item bg-warning" href="#" th:href="@{/produto}"
+							sec:authorize="hasRole('PRODUTO')">Produto</a>
+						<a class="dropdown-item bg-warning" href="#" th:href="@{/pacote}"
+							sec:authorize="hasRole('CAIXA')">Pacote</a>
+				</div>
+			</li>
 
-					<div class="dropdown-menu bg-warning"
-						aria-labelledby="navbarDropdown">
-						<a class="dropdown-item bg-warning" href="#"
-							th:href="@{/cliente/lista}"
-							sec:authorize="hasRole('ROLE_CLIENTE')">Tutores</a> <a
-							class="dropdown-item bg-warning" href="#" th:href="@{/pet/lista}"
-							sec:authorize="hasRole('ROLE_PET')">Pets</a> <a
-							class="dropdown-item bg-warning" href="#"
-							th:href="@{/prontuario/lista}"
-							sec:authorize="hasRole('ROLE_VETERINARIA')">Prontuários</a> <a
-							class="dropdown-item bg-warning" href="#"
-							th:href="@{/caixa/lista}" sec:authorize="hasRole('ROLE_CAIXA')">Livro Caixa</a>
-						<a class="dropdown-item bg-warning" href="#"
-							th:href="@{/produto/lista/todos}"
-							sec:authorize="hasRole('ROLE_PRODUTO')">Estoque</a>
-						<a class="dropdown-item bg-warning" href="#"
-							th:href="@{/pacote/lista}"
-							sec:authorize="hasRole('ROLE_CAIXA')">Pacotes</a>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+					role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Listas</a>
+
+					<div class="dropdown-menu bg-warning" aria-labelledby="navbarDropdown">
+					<a class="dropdown-item bg-warning" href="#" th:href="@{/cliente/lista}"
+						sec:authorize="hasRole('CLIENTE')">Tutores</a>
+					<a class="dropdown-item bg-warning" href="#" th:href="@{/pet/lista}"
+						sec:authorize="hasRole('PET')">Pets</a>
+					<a class="dropdown-item bg-warning" href="#" th:href="@{/prontuario/lista}"
+						sec:authorize="hasRole('VETERINARIA')">Prontuários</a>
+					<a class="dropdown-item bg-warning" href="#" th:href="@{/caixa/lista}"
+						sec:authorize="hasRole('CAIXA')">Livro Caixa</a>
+					<a class="dropdown-item bg-warning" href="#" th:href="@{/produto/lista/todos}"
+						sec:authorize="hasRole('PRODUTO')">Estoque</a>
+					<a class="dropdown-item bg-warning" href="#" th:href="@{/pacote/lista}"
+						sec:authorize="hasRole('CAIXA')">Pacotes</a>
+
 
 
 					</div></li>
@@ -94,27 +85,27 @@
 
 						<a class="dropdown-item bg-warning" href="#"
 							th:href="@{/relatorio/__${#dates.format(#dates.createNow(), 'yyyy')}__}"
-							sec:authorize="hasRole('ROLE_CAIXA')">Relatório Financeiro</a> <a
+							sec:authorize="hasRole('CAIXA')">Relatório Financeiro</a> <a
 							class="dropdown-item bg-warning" href="#"
 							th:href="@{/atendimento/pendentes}"
-							sec:authorize="hasRole('ROLE_ATENDIMENTO')">Pagamentos a
+							sec:authorize="hasRole('ATENDIMENTO')">Pagamentos a
 							receber</a> <a class="dropdown-item bg-warning" href="#"
 							th:href="@{/cesta/aquisicao}"
-							sec:authorize="hasRole('ROLE_PRODUTO')">Itens Aquisição</a> <a
+							sec:authorize="hasRole('PRODUTO')">Itens Aquisição</a> <a
 							class="dropdown-item bg-warning" href="#"
 							th:href="@{/pet/vacina/__${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}__}"
-							sec:authorize="hasRole('ROLE_VETERINARIA')">Pets com Vacinas
+							sec:authorize="hasRole('VETERINARIA')">Pets com Vacinas
 							Vencidas</a><a class="dropdown-item bg-warning" href="#"
 							th:href="@{/atendimento/consulta}"
-							sec:authorize="hasRole('ROLE_CAIXA')">Buscar atendimentos</a><a
+							sec:authorize="hasRole('CAIXA')">Buscar atendimentos</a><a
 							class="dropdown-item bg-warning" href="#"
 							th:href="@{/processamentos}"
-							sec:authorize="hasRole('ROLE_CAIXA')">Processamentos</a><a
+							sec:authorize="hasRole('CAIXA')">Processamentos</a><a
 							class="dropdown-item bg-warning" href="#"
 							th:href="@{/caixa/fechamento/__${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}__}"
-							sec:authorize="hasRole('ROLE_CAIXA')">Fechamento de Caixa</a><a
+							sec:authorize="hasRole('CAIXA')">Fechamento de Caixa</a><a
 							class="dropdown-item bg-warning" href="#" th:href="@{/nfe/}"
-							sec:authorize="hasRole('ROLE_NFE')">Nota Fiscal</a><a
+							sec:authorize="hasRole('NFE')">Nota Fiscal</a><a
 							class="dropdown-item bg-warning" href="#" th:href="@{/about}">Sobre</a>
 
 
@@ -130,10 +121,10 @@
 					<div class="dropdown-menu bg-warning"
 						aria-labelledby="navbarDropdown">
 						<a class="dropdown-item bg-warning" href="#" th:href="@{/usuario}"
-							sec:authorize="hasRole('ROLE_ADM')">Novo</a> <a
+							sec:authorize="hasRole('ADM')">Novo</a> <a
 							class="dropdown-item bg-warning" href="#"
-							th:href="@{/usuario/lista}" sec:authorize="hasRole('ROLE_ADM')">Lista</a>
-						<div class="dropdown-divider" sec:authorize="hasRole('ROLE_ADM')"></div>
+							th:href="@{/usuario/lista}" sec:authorize="hasRole('ADM')">Lista</a>
+						<div class="dropdown-divider" sec:authorize="hasRole('ADM')"></div>
 						<a class="dropdown-item bg-warning" href="#"
 							th:href="@{/usuario/alterarsenha}">Alterar Senha</a>
 					</div></li>
@@ -142,11 +133,6 @@
 			</ul>
 		</div>
 	</nav>
-	
-	
-	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-		crossorigin="anonymous"></script>
 
 	<script src="/js/main.js"></script>
 

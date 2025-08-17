@@ -30,8 +30,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 	  @Query("Select p.tipo from Produto p GROUP BY p.tipo")
 	  public List<String> listaProdutos();
 	  
-	  public Page<Produto> findAll(Pageable pageable);
-	  
 	  @Query("Select p from Produto p where p.nome like %?1%")
 	  public Page<Produto> consultar(String nome, Pageable pageable);
 	  

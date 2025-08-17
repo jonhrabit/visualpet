@@ -1,30 +1,28 @@
 package px.main.veterinaria.modelos;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
 
 @Entity
@@ -32,7 +30,7 @@ import lombok.Data;
 @Table(name = "pets")
 public class Pet {
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@Basic(optional = false)
@@ -96,11 +94,23 @@ public class Pet {
 		this.tutor = tutor;
 		this.informacoes = new ArrayList<PetInformacao>();
 	}
+
+	public Pet(String nome, Cliente tutor, Date nascimento) {
+		this.id = 0;
+		this.nascimento = null;
+		this.especie = "Cão";
+		this.nome = nome;
+		this.nascimento = nascimento;
+		this.tutor = tutor;
+		this.informacoes = new ArrayList<PetInformacao>();
+	}
+
 	public boolean isNovo() {
 		if ((this.id == 0) || (this.id == null))
 			return true;
 		return false;
 	}
+
 	@Override
 	public String toString() {
 		return "Pet [id=" + id + ", nome=" + nome + ", especie=" + especie + ", raca=" + raca + ", pelagem=" + pelagem

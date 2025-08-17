@@ -1,18 +1,14 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	lang="pt-br">
 
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<link th:replace="fragmentos/css"></link>
-
-<style type="text/css">
-a {
-	color: black;
-}
-</style>
+<link th:replace="~{fragmentos/css}"></link>
 
 <title>Atendimentos</title>
 <link rel="icon" href="/images/icon.png" />
@@ -20,7 +16,7 @@ a {
 </head>
 
 <body>
-	<div th:replace="fragmentos/menu"></div>
+	<div th:replace="~{fragmentos/menu}"></div>
 
 	<div class="modal modal-warning fade" id="modal-mensagem">
 		<div class="modal-dialog">
@@ -129,19 +125,13 @@ a {
 	</div>
 
 
-	<div th:replace="fragmentos/js"></div>
+	<script th:replace="~{fragmentos/js}"></script>
 
 	<script src="/js/atendimento/listaatendimento.js"></script>
 
 
 	<script th:inline="javascript">
-		var isInlineEdit = [[${ mensagem } != null ? true : false]];
 
-		if (isInlineEdit) {
-			$(window).on('load', function () {
-				$('#modal-mensagem').modal('show');
-			});
-		}
 		atualizar(99);
 		function atualizar(tipo){
 			$.ajax({

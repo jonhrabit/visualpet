@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  lang="pt-BR"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security5"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <title>Receituário</title>
+    <link rel="icon" href="/images/icon.png" />
+    <link rel="stylesheet" href="/css/receita.css" />
+  </head>
+  <body>
+    <div class="header">
+      <div>
+        <img src="/images/receita/vet.jpg" alt="Logo" style="width: 8rem" />
+      </div>
+      <div>
+        <h1>Audrea May Chaves</h1>
+        <h4>CRMV 16864</h4>
+      </div>
+    </div>
+    <div>
+      <h3>Receita Simples</h3>
+    </div>
+    <div class="dados">
+      <div class="section">
+        <p>Tutor: <span th:text="${prontuario.pet.tutor.nome}"></span></p>
+        <p>
+          Endereço:
+          <span
+            th:text="${prontuario.pet.tutor.endereco!=''?prontuario.pet.tutor.endereco:'Não informado'}"
+          ></span>
+        </p>
+        <p>
+          cpf:
+          <span
+            th:text="${prontuario.pet.tutor.cpf!=null?prontuario.pet.tutor.cpf:'não informado'}"
+          ></span>
+        </p>
+
+        <p>Celular: <span th:text="${prontuario.pet.tutor.celular}"></span></p>
+      </div>
+      <div class="section">
+        <p>Animal: <span th:text="${prontuario.pet.nome}"></span></p>
+        <p>
+          Especie/Raça:
+          <span
+            th:text="|${prontuario.pet.especie}/${prontuario.pet.raca}|"
+          ></span>
+        </p>
+        <p>
+          Sexo:
+          <span th:text="${prontuario.pet.sexo==1?'Macho':'Femea'}"></span>
+        </p>
+        <p>
+          Nascimento:
+          <span
+            th:text="${prontuario.pet.nascimento!=null?#dates.format(prontuario.pet.nascimento, 'dd/MM/yyyy'):'N/D'}"
+          ></span>
+        </p>
+      </div>
+    </div>
+    <div class="content">
+      <div class="textarea">
+        <textarea th:text="${prontuario.terapeutica}"></textarea>
+      </div>
+    </div>
+    <footer>
+      <div class="data">
+        <p
+          th:text="|Porto Alegre, ${#dates.format(#calendars.createNow(), 'dd  MMMM yyyy')}|"
+        ></p>
+      </div>
+      <div class="espaco"></div>
+      <div class="assinatura">
+        <p>_________________________________________</p>
+        <p>Audrea May Chaves</p>
+        <p>CRMV 16864</p>
+      </div>
+    </footer>
+  </body>
+</html>

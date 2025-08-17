@@ -1,167 +1,187 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
-	integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt"
-	crossorigin="anonymous" />
 
-<title>Vendas</title>
-<link rel="icon" href="/images/icon.png" />
+<link th:replace="~{fragmentos/css}"></link>
 
-</head>
-<body>
-	<div th:replace="fragmentos/menu"></div>
+    <title>Vendas</title>
+    <link rel="icon" href="/images/icon.png" />
+  </head>
+  <body>
+    <div th:replace="~{fragmentos/menu}"></div>
 
-	<div class="container" style="padding: 20">
-		<h4>Vendas</h4>
-		<h6>Informe um período para consultar as vendas realizadas naquele período.</h6>
-		<div class="row">
-			<div class="col-md-10">
+    <div class="container" style="padding: 20">
+      <h4>Vendas</h4>
+      <h6>
+        Informe um período para consultar as vendas realizadas naquele período.
+      </h6>
+      <div class="row">
+        <div class="col-md-10">
+          <form
+            th:object="${view}"
+            th:action="@{/cesta/consultar}"
+            method="post"
+            id="formulario"
+          >
+            <input
+              type="hidden"
+              th:name="${_csrf.parameterName}"
+              th:value="${_csrf.token}"
+            />
 
-				<form th:object="${view}" th:action="@{/cesta/consultar}"
-					method="post" id="formulario">
-					<input type="hidden" th:name="${_csrf.parameterName}"
-						th:value="${_csrf.token}" />
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="dataInicial">Data Inicial</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="dataInicial"
+                    th:field="*{dataInicial}"
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="dataFinal">Data Final</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="dataFinal"
+                    th:field="*{dataFinal}"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="tipo">Tipo</label
+                  ><select class="form-control" th:field="*{tipo}" id="tipo">
+                    <option value="">Todos</option>
+                    <option value="produto">Produtos</option>
+                    <option value="servico">Serviços</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="forma">Forma de Pagamento</label
+                  ><select class="form-control" th:field="*{forma}" id="forma">
+                    <option value="0">Todos</option>
+                    <option value="1">Dinheiro</option>
+                    <option value="2">Débito</option>
+                    <option value="3">Crédito</option>
+                    <option value="4">Crédito/Compr.</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="tutor">Tutor </label>
+              <select id="tutor" class="form-control" th:field="*{tutor}">
+                <option value="" selected="selected"></option>
+                <option
+                  th:each="cliente : ${listaClientes}"
+                  th:value="${cliente.id}"
+                  th:text="${cliente.nome}"
+                ></option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-2 text-center">
+          <button
+            type="submit"
+            class="m-2 p-3 btn btn-primary"
+            id="consultar"
+            form="formulario"
+          >
+            Consultar
+          </button>
+        </div>
+      </div>
+      <table class="table" th:if="${#lists.size(view.resultadoFiltrado)>0}">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Data</th>
+            <th>Cliente</th>
+            <th>Itens</th>
+            <th>Total</th>
+            <th>Taxa</th>
+            <th>Valor Liq.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="item, i:${view.resultadoFiltrado}">
+            <td th:text="${i.count}"></td>
 
-					<div class="row">
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="dataInicial">Data Inicial</label> <input type="date"
-									class="form-control" id="dataInicial" th:field="*{dataInicial}" />
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="dataFinal">Data Final</label> <input type="date"
-									class="form-control" id="dataFinal" th:field="*{dataFinal}" />
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<div class="form-group">
-								<label for="tipo">Tipo</label><select class="form-control"
-									th:field="*{tipo}" id="tipo">
-									<option value="">Todos</option>
-									<option value="produto">Produtos</option>
-									<option value="servico">Serviços</option>
-								</select>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label for="forma">Forma de Pagamento</label><select
-									class="form-control" th:field="*{forma}" id="forma">
-									<option value="0">Todos</option>
-									<option value="1">Dinheiro</option>
-									<option value="2">Débito</option>
-									<option value="3">Crédito</option>
-									<option value="4">Crédito/Compr.</option>
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="tutor">Tutor </label> <select id="tutor"
-							class="form-control" th:field="*{tutor}">
-							<option value="" selected="selected"></option>
-							<option th:each="cliente : ${listaClientes}"
-								th:value="${cliente.id}" th:text="${cliente.nome}"></option>
-						</select>
-					</div>
-				</form>
-			</div>
-			<div class="col-md-2 text-center">
-				<button type="submit" class="m-2 p-3 btn btn-primary" id="consultar"
-					form="formulario">Consultar</button>
-			</div>
-		</div>
-		<table class="table" th:if="${#lists.size(view.resultadoFiltrado)>0}">
-			<thead>
-				<tr>
-					<th></th>
-					<th>Data</th>
-					<th>Cliente</th>
-					<th>Itens</th>
-					<th>Total</th>
-					<th>Taxa</th>
-					<th>Valor Liq.</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="item, i:${view.resultadoFiltrado}">
-					<td th:text="${i.count}"></td>
+            <td>
+              <a
+                th:text="${#dates.format(item.data, 'dd/MM/yyyy HH:mm')}"
+                th:href="@{/cesta/__${item.id}__}"
+              >
+              </a>
+            </td>
+            <td>
+              <a
+                th:text="${item.cliente.nome}"
+                th:href="@{/cliente/__${item.cliente.id}__}"
+              ></a>
+            </td>
+            <td
+              th:text="${#lists.size(item.produtos)}"
+              class="soma_unidade"
+            ></td>
+            <td th:text="${item.total}" class="soma"></td>
+            <td th:text="${item.valorLiquido}" class="vl"></td>
+          </tr>
 
-					<td><a
-						th:text="${#dates.format(item.data, 'dd/MM/yyyy HH:mm')}"
-						th:href="@{/cesta/__${item.id}__}"> </a></td>
-					<td><a th:text="${item.cliente.nome}"
-						th:href="@{/cliente/__${item.cliente.id}__}"></a></td>
-					<td th:text="${#lists.size(item.produtos)}" class="soma_unidade"></td>				
-					<td th:text="${item.total}" class="soma"></td>				
-					<td th:text="${item.valorLiquido}" class="vl"></td>			
-				</tr>
+          <tr class="bg-dark">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="text-white">Totais</td>
+            <td id="quantidade" class="text-white"></td>
+            <td id="total" class="text-white"></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-				<tr class="bg-dark">
-					<td></td>
-					<td></td>
-					<td></td>
-					<td class="text-white">Totais</td>
-					<td id="quantidade" class="text-white"></td>
-					<td id="total" class="text-white"></td>
-					<td></td>
-					<td></td>
-				</tr>
+    <script th:replace="~{fragmentos/js}"></script>
 
-			</tbody>
-		</table>
+    <script th:inline="javascript">
+      var valor=0;
+       $('.soma').each(function(){
+      	 valor = valor + Number( $( this ).html().replace(/[^\d]+/g,''));
+          });
+      	$("#total").text("R$ " +  Number( valor/100 ).toFixed(2) );
 
-	</div>
+      	var quantidade=0;
+      	 $('.soma_unidade').each(function(){
+      		 quantidade= quantidade + Number( $( this ).html().replace(/[^\d]+/g,''));
+      	    });
+      		$("#quantidade").text(quantidade);
 
-	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-		crossorigin="anonymous"></script>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js"
-		integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P"
-		crossorigin="anonymous"></script>
+      function imprimir()
+        {
+      	$("#formulario").attr("action",[[@{/caixa/imprimir}]]);
+      	$("#formulario").submit();
+        }
+       var isInlineEdit = [[${mensagem} != null ? true:false]];
 
-	<script th:inline="javascript">	
-	var valor=0;
-	 $('.soma').each(function(){
-		 valor = valor + Number( $( this ).html().replace(/[^\d]+/g,''));
-	    });
-		$("#total").text("R$ " +  Number( valor/100 ).toFixed(2) );
-		
-		var quantidade=0;
-		 $('.soma_unidade').each(function(){
-			 quantidade= quantidade + Number( $( this ).html().replace(/[^\d]+/g,''));
-		    });
-			$("#quantidade").text(quantidade);
-	
-	
-	function imprimir()
-	  {
-		$("#formulario").attr("action",[[@{/caixa/imprimir}]]);
-		$("#formulario").submit();
-	  }	
-	 var isInlineEdit = [[${mensagem} != null ? true:false]];
-	 
-	  if(isInlineEdit){
-		  $(window).on('load', function() {
-				$('#modal-mensagem').modal('show');
-			});
-	      }
-	  
-	</script>
-</body>
+        if(isInlineEdit){
+      	  $(window).on('load', function() {
+      			$('#modal-mensagem').modal('show');
+      		});
+            }
+    </script>
+  </body>
 </html>

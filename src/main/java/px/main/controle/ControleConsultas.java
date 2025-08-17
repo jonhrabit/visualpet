@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,39 +29,39 @@ public class ControleConsultas {
 	@Autowired
 	CaixaService caixaService;
 
-	@RequestMapping(value = "", method = RequestMethod.GET)
+	@GetMapping("")
 	public ModelAndView getConsulta() {
 		ModelAndView model = new ModelAndView("relatorio/relatorio");
 		return model;
 	}
 
-	@RequestMapping(value = "/atendimentosporservico/{mes}/{ano}", method = RequestMethod.GET)
+	@GetMapping("/atendimentosporservico/{mes}/{ano}")
 	public @ResponseBody List<AtendimentosPorServico> getAtendimentosPorServico(@PathVariable Integer mes,
 			@PathVariable Integer ano) {
 		return atendimentoService.getListaPorServico(mes, ano);
 	}
-	@RequestMapping(value = "/vendas/{mes}/{ano}", method = RequestMethod.GET)
+	@GetMapping("/vendas/{mes}/{ano}")
 	public @ResponseBody Vendas getVendas(@PathVariable Integer mes, @PathVariable Integer ano) {
 		return cestaService.relProdutosMes(mes, ano);
 	}
 
-	@RequestMapping(value = "/atendimentosporservico/trimestre/{mes}/{ano}", method = RequestMethod.GET)
+	@GetMapping("/atendimentosporservico/trimestre/{mes}/{ano}")
 	public @ResponseBody RelatorioAtendimentosPorServico getTrimestreAtendimentosPorServico(@PathVariable Integer mes,
 			@PathVariable Integer ano) {
 		return atendimentoService.getRelatorioPorServico(mes, ano);
 	}
 
-	@RequestMapping(value = "/atendimentosporcliente/{mes}/{ano}", method = RequestMethod.GET)
+	@GetMapping("/atendimentosporcliente/{mes}/{ano}")
 	public @ResponseBody List<AtendimentosPorCliente> getAtendimentosPorCliente(@PathVariable Integer mes,
 			@PathVariable Integer ano) {
 		return atendimentoService.getListaPorCliente(mes, ano);
 	}
 
-	@RequestMapping(value = "/caixasemcodigo", method = RequestMethod.GET)
+	@GetMapping("/caixasemcodigo")
 	public @ResponseBody List<Caixa> getCaixaNotCod() {
 		return caixaService.buscarNotCodigoVenda();
 	}
-	@RequestMapping(value = "/relatorio/{mes}/{ano}", method = RequestMethod.GET)
+	@GetMapping("/relatorio/{mes}/{ano}")
 	public @ResponseBody List<Caixa> getRelatorio(@PathVariable Integer mes, @PathVariable Integer ano) {
 		
 		return caixaService.buscarNotCodigoVenda();

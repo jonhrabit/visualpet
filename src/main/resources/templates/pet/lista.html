@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -5,23 +6,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css"
-	integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt"
-	crossorigin="anonymous" />
-
-<style type="text/css">
-a {
-	color: black;
-}
-</style>
+<link th:replace="~{fragmentos/css}"></link>
 
 <title>Pets</title>
-<link rel="icon" href="/images/icon.png" />
+<link rel="icon" href="/images/icon.png"/>
 
 </head>
 <body>
-	<div th:replace="fragmentos/menu"></div>
+	<div th:replace="~{fragmentos/menu}"></div>
 
 	<div class="container" style="padding: 20">
 		<div class="row">
@@ -29,12 +21,11 @@ a {
 				<h4>Pets</h4>
 			</div>
 			<div class="col-md-6">
-				<form class="form-inline float-right" th:action="@{/pet/consulta}"
-					method="POST" th:object="${pet}">
+				<div class="form-inline float-right">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					<input class="form-control form-control-sm ml-3 w-75" type="text"
-						th:field="*{nome}" />
-				</form>
+						id="consulta" onchange="consultaFn(this)"/>
+				</div>
 			</div>
 		</div>
 		<table class="table">
@@ -49,22 +40,16 @@ a {
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="item:${lista}">
-					<td><a href="/pet/__${item.id}__"
-						th:href="@{/pet/__${item.id}__}" th:text="${item.nome}"></a></td>
-
-					<td><a href="#" th:href="@{/cliente/__${item.tutor.id}__}"
-						th:text="${item.tutor.nome}"></a></td>
-					<td th:text="${item.especie}"></td>
-					<td th:text="${item.raca}"></td>
-					<td th:text="${item.sexo}==1?'Macho':'Femea'"></td>
-					<td th:text="${item.pelagem}"></td>
-					<td><a class="btn btn-danger" th:name="${item.nome}"
-						th:onclick="|del(${item.id},this.name)|">Excluir</a></td>
-
-				</tr>
 			</tbody>
 		</table>
+		<div>
+			<a href="#" class="btn btn-primary" onclick="menos(10)">-10</a>
+			<a href="#" class="btn btn-primary" onclick="menos()">-</a>
+			<span id="page"></span> / <span id="totalPages"></span>
+			<a href="#" class="btn btn-primary" onclick="mais()">+</a>
+			<a href="#" class="btn btn-primary" onclick="mais(10)">+10</a>
+			Total: <span id="TotalElementos"></span>
+		</div>
 	</div>
 
 
@@ -96,19 +81,72 @@ a {
 		</div>
 	</div>
 
-	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/js/bootstrap.min.js"
-		integrity="sha384-3qaqj0lc6sV/qpzrc1N5DC6i1VRn/HyX4qdPaiEFbn54VjQBEU341pvjz7Dv3n6P"
-		crossorigin="anonymous"></script>
+
+	<script th:replace="~{fragmentos/js}"></script>
 
 	<script th:inline="javascript">
-	 var isInlineEdit = [[${mensagem} != null ? true:false]];
-	 
+		var isInlineEdit = /*[[${mensagem} != null ? true:false]]*/ false;
+		var listaCompleta = /*[[${lista}]]*/ [];
+		let page = 0;
+		let pageSize = 10;
+		let totalPages = Math.ceil(listaCompleta.length / pageSize);
+		let totalElements = listaCompleta.length;
+		let listaPage = listaCompleta.splice(page*pageSize, page*pageSize+pageSize);
+		atualizaLista();
+
+		consultaFn = function(input) {
+			var consulta = input.value.toLowerCase();
+			if (consulta.length > 0) {
+				listaCompleta = listaCompleta.filter(function(item) {
+					return item.nome.toLowerCase().includes(consulta) ||
+						item.tutor.nome.toLowerCase().includes(consulta) 
+				});
+			} else {
+				listaCompleta = /*[[${lista}]]*/ [];
+			}
+			totalPages = Math.ceil(listaCompleta.length / pageSize);
+			page = 0;
+			totalElements = listaCompleta.length;
+			atualizaLista();
+		};
+
+	function mais(num = 1) {
+		if (page < totalPages - 1) {
+			page+=num;
+		} else {
+			page = 0;
+		}
+		atualizaLista();
+	}
+	function menos(num = 1) {
+		if (page > 0) {
+			page-=num;
+		} else {
+			page = totalPages - 1;
+		}
+		atualizaLista();
+	}
+
+	function atualizaLista() {
+		listaPage = listaCompleta.slice(page * pageSize, (page * pageSize) + pageSize);
+		$('tbody').empty();
+		listaPage.forEach(function(item) {
+			var row = `<tr>
+				<td><a href="/pet/${item.id}">${item.nome}</a></td>
+				<td><a href="/cliente/${item.tutor.id}">${item.tutor.nome}</a></td>
+				<td>${item.especie}</td>
+				<td>${item.raca}</td>
+				<td>${item.sexo==1?'Macho':'Femea'}</td>
+				<td>${item.pelagem}</td>
+				<td><a class="btn btn-danger" th:onclick="del(${item.id},this.name)">Excluir</a></td>
+			</tr>`;
+			$('tbody').append(row);
+		});
+		$('#page').text(page + 1);
+		$('#totalPages').text(totalPages);
+		$('#TotalElementos').text(totalElements);
+	}
+
 	  if(isInlineEdit){
 		  $(window).on('load', function() {
 				$('#modal-mensagem').modal('show');
@@ -123,6 +161,9 @@ a {
            $(".modal-body").html(texto);
 			$("#tutorModal").modal("show");
 	  }
+
+
+
 	</script>
 
 </body>

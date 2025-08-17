@@ -1,5 +1,6 @@
 package px.main.configuracao;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,8 +12,9 @@ import org.springframework.util.StringUtils;
 import px.main.seguranca.modelos.Usuario;
 
 public class CustomUserDetails extends Usuario implements UserDetails {
-	
-	private static final long serialVersionUID = 1L;
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 	private List<String> userRoles;
 
 	public CustomUserDetails(Usuario u, List<String> userRoles) {

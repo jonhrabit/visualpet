@@ -236,7 +236,7 @@ public class CaixaService {
 	}
 
 	public List<Extrato> compararListas(List<Extrato> extratos) {
-		List<Caixa> caixas = caixaRepository.notCodigoVenda();
+		List<Caixa> caixas = this.buscarNotCodigoVenda();
 		System.out.println("Caixas: " + caixas.size());
 		System.out.println("Extratos: " + extratos.size());
 		System.out.println("Interações: " + (extratos.size() * caixas.size()));
@@ -264,7 +264,8 @@ public class CaixaService {
 	}
 
 	public List<Caixa> buscarNotCodigoVenda() {
-		return caixaRepository.notCodigoVenda();
+		return caixaRepository.findAll().stream().filter(c -> (c.getCodigoVenda() == null) && (c.getTipo() == 1)
+				&& (c.getForma() != null) && (Integer.parseInt(c.getForma()) >= 2)).collect(Collectors.toList());
 	}
 
 	public Taxa getTaxa(Integer forma, Integer vezes) {
@@ -278,9 +279,9 @@ public class CaixaService {
 	public List<Caixa> getCaixaAno(Integer ano) {
 		return caixaRepository.findCaixaPorAno(ano);
 	}
-	public List<LocalDate> getFeriadosList(){
-		FeriadosService feriados = new FeriadosService();
-		return feriados.getDatas();
+
+	public List<LocalDate> getFeriadosList() {
+		return FeriadosService.getDatas();
 	}
 
 }

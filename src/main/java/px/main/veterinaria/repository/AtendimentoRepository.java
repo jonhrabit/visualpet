@@ -39,13 +39,14 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Intege
 	@Query("select u from Atendimento u where u.agenda>=?1 and u.agenda<=?2 ORDER BY u.agenda ASC")
 	List<Atendimento> search(Date data1, Date data2);
 
-	@Query("select u from Atendimento u where (u.agenda>=?1 and u.agenda<=?2) or (u.situacao<='1' and u.situacao!='4') ORDER BY u.agenda ASC")
+
+	@Query("select u from Atendimento u where (u.agenda>=?1 and u.agenda<=?2) or (u.situacao<=1 and u.situacao!=4) ORDER BY u.agenda ASC")
 	List<Atendimento> semanaAndNaoFinalizados(Date date, Date date2);
 
-	@Query("select u from Atendimento u where ((u.agenda>=?1 and u.agenda<=?2) or (u.situacao<='1' and u.situacao!='4')) and (u.servico.tipo=?3) ORDER BY u.agenda ASC")
+	@Query("select u from Atendimento u where ((u.agenda>=?1 and u.agenda<=?2) or (u.situacao<=1 and u.situacao!=4)) and (u.servico.tipo=?3) ORDER BY u.agenda ASC")
 	List<Atendimento> semanaToService(Date date, Date date2, ServicoTipo servicoTipo);
 
-	@Query("select u from Atendimento u where u.situacao>='4' ORDER BY u.agenda ASC")
+	@Query("select u from Atendimento u where u.situacao>=4 ORDER BY u.agenda ASC")
 	public List<Atendimento> findPendentes();
 
 	@Query("SELECT "
