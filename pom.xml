@@ -11,9 +11,9 @@
 	</parent>
 	<groupId>px.main</groupId>
 	<artifactId>VisualPet</artifactId>
-	<version>3.0</version>
+	<version>3.0.1</version>
 	<name>visualpet</name>
-	<description>VisualPET Gerente</description>
+	<description>VisualPET Gerenciamento de PetShop</description>
 	<url />
 	<licenses>
 		<license />
