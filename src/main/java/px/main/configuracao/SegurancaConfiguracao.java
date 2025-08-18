@@ -47,7 +47,7 @@ public class SegurancaConfiguracao {
 						.anyRequest().authenticated())
 				.formLogin(login -> login
 						.loginPage("/login")
-						.defaultSuccessUrl("/atendimento/lista")
+						.defaultSuccessUrl("/atendimento/lista",true)
 						.permitAll())
 				.logout(logout -> logout
 						.logoutUrl("/logout")
